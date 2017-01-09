@@ -1,0 +1,164 @@
+---
+title: "OregonSchools"
+output: pdf_document
+---
+
+Load Libraries
+
+
+```{r}
+library(dplyr)
+library(stringr)
+
+```
+
+Load dataframes for School performance from 2002-2016. The name for each dataframe is "Schoolxx" where xx is the last 2 digits of the ending academic year from which the data is for. The formating and the information provided in these school report cards slightly changes after 2012.   
+
+```{r}
+Schools16 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/17/RCmediaSchoolsAggregate.csv")
+Schools15 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/16/RCmediaSchoolsAggregate.csv")
+Schools14 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/15/RCmediaSchoolsAggregate.csv")
+Schools13 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/14/RCmediaSchoolsAggregate.csv")
+Schools12 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/13/RCmediaSchoolsAggregate.csv")
+Schools11 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/12/RCmediaSchoolsAggregate.csv")
+Schools10 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/11/RCmediaSchoolsAggregate.csv")
+Schools09 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/10/RCmediaSchoolsAggregate.csv")
+Schools08 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/09/RCmediaSchools.csv")
+Schools07 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/08/RCmediaSchools.csv")
+Schools06 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/07/RCmediaSchools.csv")
+Schools05 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/06/RCmediaSchools.csv")
+Schools04 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/05/RCmediaSchools.csv")
+Schools03 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/04/RCmedia.csv")
+
+```
+
+
+Keep only relevant Columns for each dataframe such as school ID number, name, type, total enrollment, percent of regular attendance, and finally, student performance metrics. 
+
+We're only looking at percent of students that pass math each academic year. Testing methods and available information for science and language arts/writing/reading are inconsistent over the years. Columns are named differently for dataframes from 2012 and earlier. 
+
+These smaller dataframes are named "Pxx" where xx is the last 2 digits of the ending academic year from which the data is for.
+
+```{r}
+
+P16 <- Schools16 %>% subset(, c("School.ID","School.Name", "School.Type", "Total.Enrollment", "Pct.of.Students.Attending.Regularly", "Math.Pct.Met.2015.16"))
+
+P15 <- Schools15 %>% subset(, c("School.ID", "Total.Enrollment", "Pct.of.Students.Attending.Regularly", "Math.Pct.Met.2014.15"))
+
+P14 <- Schools14 %>% subset(, c("School.ID", "Total.Enrollment" , "Pct.of.Students.Attending.Regularly", "Math.Pct.Met.2013.14"))
+
+P13 <- Schools13 %>% subset(, c("School.ID", "Total.Enrollment" , "Pct.of.Students.Attending.Regularly", "Math.Pct.Met.2012.13"))
+
+P12 <- Schools12 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1","MathCompSchoolAllGradePct" ))
+
+P11 <- Schools11 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathCompSchoolAllGradePct" ))
+
+P10 <- Schools10 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2","AttdPct1", "MathCompSchoolAllGradePct"))
+
+P09 <- Schools09 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathCompSchoolAllGradePct"))
+
+P08 <- Schools08 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathCompSchoolAllGradePct" ))
+
+P07 <- Schools07 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathCompSchoolAllGradePct"))
+
+P06 <- Schools06 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathCompSchoolAllGradePct"))
+
+P05 <- Schools05 %>% subset(, c("InstID", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathCompSchoolAllGradePct"))
+
+P04 <- Schools04 %>% subset(, c( "instid", "DailyMmbrshpAvgAmt1", "AttdPct2", "AttdPct1", "MathPSCompSchoolAllGradePct"))
+
+P03 <- Schools03 %>% subset(,c("instid", "DailyMmbrshpAvgAmt1", "AttdPct4" , "AttdPct3", "AttdPct2" , "AttdPct1", "MathCompSchoolAllGradePct"))
+
+```
+
+
+Rename the columns in each dataframe so that they are consistent through all of them. The dataframe P03 does not have a SchoolType column (E,M,H).
+
+```{r}
+library(base)
+
+names(P16) <- c("SchoolID", "SchoolName", "SchoolType", "Enrollment2016", "Attendance2016","Math2016")
+P16$Math2016 <- as.numeric(as.character(P16$Math2016))
+
+names(P15) <- c("SchoolID", "Enrollment2015", "Attendance15", "Math2015")
+P15$Math2015 <- as.numeric(as.character(P15$Math2015))
+
+names(P14) <- c("SchoolID", "Enrollment2014", "Attendance14", "Math2014")
+P14$Math2014 <- as.numeric(as.character(P14$Math2014))
+
+names(P13) <- c("SchoolID", "Enrollment2013", "Attendance13", "Math2013")
+P13$Math2013 <- as.numeric(as.character(P13$Math2013))
+
+names(P12) <- c("SchoolID", "Enrollment2012", "2Attendance12", "1Attendance12", "Math2012")
+P12$Math2012 <- as.numeric(as.character(P12$Math2012))
+
+names(P11) <- c("SchoolID", "Enrollment2011", "2Attendance11", "1Attendance11",  "Math2011")
+P11$Math2011 <- as.numeric(as.character(P11$Math2011))
+
+names(P10) <- c("SchoolID" , "Enrollment2010", "2Attendance10", "1Attendance10", "Math2010")
+P10$Math2010 <- as.numeric(as.character(P10$Math2010))
+
+names(P09) <- c("SchoolID", "Enrollment2009", "2Attendance09", "1Attendance09", "Math2009")
+P09$Math2009 <- as.numeric(as.character(P09$Math2009))
+
+names(P08) <- c("SchoolID", "Enrollment2008", "2Attendance08", "1Attendance08", "Math2008")
+P09$Math2009 <- as.numeric(as.character(P09$Math2009))
+
+names(P07) <- c("SchoolID", "Enrollment2007", "2Attendance07", "1Attendance07", "Math2007")
+P07$Math2007 <- as.numeric(as.character(P07$Math2007))
+
+names(P06) <- c("SchoolID", "Enrollment2006", "2Attendance06", "1Attendance06", "Math2006")
+P06$Math2006 <- as.numeric(as.character(P06$Math2006))
+
+names(P05) <- c("SchoolID", "Enrollment2005", "2Attendance05", "1Attendance05", "Math2005")
+P05$Math2005 <- as.numeric(as.character(P05$Math2005))
+
+names(P04) <- c("SchoolID", "Enrollment2004", "2Attendance05", "1Attendance05","Math2004")
+P04$Math2004 <- as.numeric(as.character(P04$Math2004))
+
+names(P03) <- c("SchoolID", "Enrollment2003", "4Attendance2003", "3Attendance2003", "2Attendance2003", "1Attendance2003","Math2003")
+P03$Math2003 <- as.numeric(as.character(P03$Math2003))
+
+```
+
+Combine dataframes for each year into one single dataframe
+
+```{r}
+
+M16 <- merge(P16, P15, by = "SchoolID")
+M15 <- merge(M16, P14, by = "SchoolID")
+M14 <- merge(M15, P13, by = "SchoolID")
+M13 <- merge(M14, P12, by = "SchoolID")
+M12 <- merge(M13, P11, by = "SchoolID")
+M11 <- merge(M12, P10, by = "SchoolID")
+M10 <- merge(M11, P09, by = "SchoolID")
+M09 <- merge(M10, P08, by = "SchoolID")
+M08 <- merge(M09, P07, by = "SchoolID")
+M07 <- merge(M08, P06, by = "SchoolID")
+M06 <- merge(M07, P05, by = "SchoolID")
+M05 <- merge(M06, P04, by = "SchoolID")
+M04 <- merge(M05, P03, by = "SchoolID")
+
+
+
+```
+
+Filter out all high schools and only keep elementary and middle schools
+
+```{r}
+
+SchoolPerformance <- subset(M04, SchoolType %in% c("E","M"))
+
+```
+
+
+Create csv file for final combined dataframe
+
+
+```{r}
+write.csv(SchoolPerformance, file = "StudentPerformance.csv")
+
+#eligible <- read.csv("http://www.oregon.gov/energy/SCHOOLS/Sb1149/documents/schools_list.xls")
+
+```
+
