@@ -1,0 +1,20 @@
+---
+title: "Data Sources"
+author: "James Woods"
+date: "1/11/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
++ General education data https://www.oregon.gov/ode/reports-and-data/Pages/default.aspx  
+
++ Downloaded the finance data and stored it here https://s3-us-west-2.amazonaws.com/woodsjeeschools/ActualExpendituresFundFunction30.CSV  That should be an easy parse.
+
++ Test results 
+    + https://www.oregon.gov/ode/educator-resources/assessment/TestResults2015/pagr_schools_tot_ela_math.xlsx
+    + https://www.oregon.gov/ode/educator-resources/assessment/TestResults2016/pagr_schools_tot_ela_math.xlsx
+    + More Here https://www.oregon.gov/ode/educator-resources/assessment/Pages/Test-Results-0910-through-1314.aspx
+
