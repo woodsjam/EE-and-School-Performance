@@ -1,0 +1,32 @@
+---
+title: "Data Handle"
+author: "James Woods"
+date: "1/14/2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Financial Data
+
+This was downloaded from Oregon department of eduction.
+
+```{r}
+DistrictFinance <- read.csv("https://s3-us-west-2.amazonaws.com/woodsjeeschools/ActualExpendituresFundFunction30.CSV") 
+
+library(stringr)
+library(dplyr)
+
+#Convert to starting of fiscal year.  Remember that the year may not match with the test scores.
+DistrictFinance$YearBeginning <- as.factor(str_sub(as.character(DistrictFinance$SchlYr),-4) )
+
+```
+
+
+```{r}
+summary(DistrictFinance)
+```
+
