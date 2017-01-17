@@ -87,3 +87,24 @@ Write10 <- read.csv("https://docs.google.com/spreadsheets/d/167c1jshh1156x-vJUE7
 
 ```
 
+
+## Eligible schools
+
+Not all schools are eligible.  They must be served by an IOU.  Original file has odd formating.  So, saved and accessed via gdrive.
+
+```{r}
+#Non readable because of formating to make pretty.
+#read.xlsx("http://www.oregon.gov/energy/SCHOOLS/Sb1149/documents/schools_list.xls")
+
+Eligible <- read.csv("https://docs.google.com/spreadsheets/d/1WXNu3cNY4DyZ7yWXT2MPd3bd61M0Vmo2ty62Uux1TZU/pub?gid=1048793783&single=true&output=csv")
+```
+
+## Installed measures
+
+```{r}
+EEMs <-read.csv("https://docs.google.com/spreadsheets/d/15X3x4KCEx2-_JYLjq3gXhqS33EKBscW_LLPO-MggDFk/pub?gid=1734037341&single=true&output=csv")
+```
+
+## District demographics
+
+
