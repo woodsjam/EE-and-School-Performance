@@ -107,4 +107,23 @@ EEMs <-read.csv("https://docs.google.com/spreadsheets/d/15X3x4KCEx2-_JYLjq3gXhqS
 
 ## District demographics
 
+Load dataframes for School performance from 2002-2016. The name for each dataframe is "Schoolxx" where xx is the last 2 digits of the ending academic year from which the data is for. The formating and the information provided in these school report cards slightly changes after 2012.   
+
+```{r}
+Schools16 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/17/RCmediaSchoolsAggregate.csv")
+Schools15 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/16/RCmediaSchoolsAggregate.csv")
+Schools14 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/15/RCmediaSchoolsAggregate.csv")
+Schools13 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/14/RCmediaSchoolsAggregate.csv")
+Schools12 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/13/RCmediaSchoolsAggregate.csv")
+Schools11 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/12/RCmediaSchoolsAggregate.csv")
+Schools10 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/11/RCmediaSchoolsAggregate.csv")
+Schools09 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/10/RCmediaSchoolsAggregate.csv")
+Schools08 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/09/RCmediaSchools.csv")
+Schools07 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/08/RCmediaSchools.csv")
+Schools06 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/07/RCmediaSchools.csv")
+Schools05 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/06/RCmediaSchools.csv")
+Schools04 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/05/RCmediaSchools.csv")
+Schools03 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/04/RCmedia.csv")
+
+```
 
