@@ -1,0 +1,38 @@
+---
+title: "Proposed Paper Outline"
+author: ""
+date: ""
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
++ Introduction
+    + EEM often improve learning environment and can be reguarded as a non-energy benefit of EE.
+    + As part of degregulation Oregon created funding for EE in schools.
+    + Funding only covers IOUs, which are urban oriented in OR
+    + Remainder of the state is frequently electric cooperatives.
+    + Oregon is perfect to test this because of both standardized tests and equalitation of K12 funding in 1990s.
++ Thesis: EEMs increase student performance as measured on the standardized state tests.
+    + Controling for: Prior class level performance on state exams, budgeted capital improvements, spending per student and other variables including poverty rates.
+    + Techniques for control besides simple regression
+        + DID as a regression only technique
+        + CEM accross per student budget elements and student demographics prior to EEM installation with EEM expenditures the left out factor.
+        + Regression Discontinuity for IOU/Non-ISO pairs of schools near a teritory boarder.
++ Literature
+    + The effects of the indoor environment on performance as applied to K12 
+    + History of SB1149
+    + History of Oregon K12 Education funding.
+    
++ Data
+    + Funding overview
+    + EEM installation overview
+    + Standardized test overview
+    + Community demographics overview
++ Analysis
+    + DID
+    + CEM
++ Summary and Conclusions    
