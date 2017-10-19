@@ -127,3 +127,67 @@ Schools03 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/04/RCmed
 
 ```
 
+# Linking Data
+
+Lets get the specific data items we need for each district.  Please note that this is district level data so we need to get expenditures for all grade levels as well as construction expenditures.
+
+
+```{r}
+summary(DistrictFinance$FuncDesc)
+
+```
+
+
+The key fund descriptions are:
+
+
++ Plant Capital
+    + Building Acquisition; Construction; and Improvement Services 
+    + Facilities Acquisition and Construction 
+    + Site Acquisition and Development Services
+
++ Operation and Maintenance of Plant Services 
+
++ Education Expenditures
+    + English Second Language Programs 
+    + High School Programs 
+    + Intermediate Programs
+    + Middle/Junior High Programs
+    + Primary (K-3) 
+
+Will go with the major category of instruction for Educational expenditures.
+
+```{r}
+DistrictFinance %>% 
+  filter( FuncDesc == 'Building Acquisition; Construction; and Improvement Services' | FuncDesc == 'Facilities Acquisition and Construction' | FuncDesc == 'Site Acquisition and Development Services') %>% 
+  mutate(ExpType = 'Capital') -> CapitalExpenditures
+
+DistrictFinance %>% 
+  filter( FuncDesc == 'Operation and Maintenance of Plant Services' ) %>%
+  mutate( ExpType = 'Operations' ) -> PlantOperations
+
+# Going for the larger Instructional Category
+# 
+# DistrictFinance %>% filter(FuncDesc == 'English Second Language Programs' | FuncDesc == 'High School Programs' |  FuncDesc == 'Intermediate Programs' |FuncDesc == 'Middle/Junior High Programs' | FuncDesc == 'Primary (K-3)') %>% mutate(ExpType = 'Education') -> EducationExpenditures
+
+DistrictFinance %>% 
+  filter( MajFuncDesc == 'Instruction' ) %>% 
+  mutate( ExpType = 'Education' ) -> EducationExpenditures
+
+KeyBudget <- bind_rows(list(CapitalExpenditures, PlantOperations, EducationExpenditures))
+
+
+```
+
+
+Turn this into a one row per district per year data frame
+
+```{r}
+library(tidyr)
+KeyBudget %>% spread(FuncDesc, Amount) -> Budget
+
+```
+
+
+
+
