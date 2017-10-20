@@ -189,5 +189,123 @@ KeyBudget %>% spread(FuncDesc, Amount) -> Budget
 ```
 
 
+## Installed Measures
+
+Lets find a range of dates that we need to work with.
+
+```{r}
+EEMs %>% summary()
+```
+
+Lets focus in on the years.
+
+```{r}
+table(EEMs$ImplementedYear)
+
+```
+
+
+There were a bunch in 2010.  If I go back to 2006 I should be ok to establish parallel movement.
+
+Lets get a list of school districts
+
+```{r}
+EEMs %>% select(SchoolDistrictName) %>% unique()
+```
+
+
+We have a list of eligible and ineligible by district.
+
+```{r}
+Eligible %>% 
+  select(District.ID, District.Name, SB.1149.Eligibility) %>% 
+  unique()
+
+
+```
+
+Lets find these complex districts.
+
+```{r}
+Eligible %>% 
+  select(District.ID, District.Name, SB.1149.Eligibility) %>% 
+  unique() %>%
+  group_by(District.ID, District.Name) %>%
+  count() %>%
+  filter(n > 1)
+
+```
+
+
+
+
+Note that some districts have schools that are both eligibile and not.  That could be a good comparision.  If there are similar schools in the same district one with and one without EEMs then we have a good comparison.
+ 
+Lets check for installations against this list.  Because the EEM data file has a school code and not a district code, I need to merge that in.
+
+```{r}
+Eligible %>% 
+  select( District.ID, District.Name, SB.1149.Eligibility ) %>% 
+  unique() %>%
+  group_by( District.ID, District.Name ) %>%
+  count() %>%
+  filter(n > 1) -> BorderDistrict
+
+inner_join(Eligible, BorderDistrict) -> BorderSchools
+
+inner_join(BorderSchools, EEMs, by = c("School.ID" = "FacilityODEId")) -> BorderEEM
+
+BorderEEM
+```
+
+We have schools in that list with EEMs.
+
+Lets get the schools with EEMs.
+
+```{r}
+BorderEEM %>%
+  select(School.ID, School.Name, District.ID, District.Name, FacilityTypeDescription) %>%
+  unique() -> SchoolsWEEM
+
+SchoolsWEEM
+
+```
+
+
+Now, lets see if we have schools of the same type, elementary, middle etc, within the same district that are not eligible.
+
+```{r}
+#Need to add the type of institution to the Eligible data frame
+#
+#
+
+
+library(stringr)
+
+Schools16 %>% 
+  select(School.ID, School.Type) -> SchoolType
+
+Eligible %>% 
+  left_join(SchoolType, by = c("School.ID" = "School.ID")) -> Eligible
+
+SchoolsWEEM %>%
+  left_join(SchoolType, by = c("School.ID" = "School.ID")) -> SchoolsWEEM
+  
+Eligible %>% 
+  filter(SB.1149.Eligibility == "NO") %>%
+  right_join(SchoolsWEEM, c("District.ID"= "District.ID", "School.Type"="School.Type")) -> SameTypeBorder
+
+SameTypeBorder
+
+```
+
+
+
+
+
+## District Demographics
+
+The files are so different from year to year.  This is going to be fun.  This would be so much easier if the ODE people understood some statistics.
+
 
 
