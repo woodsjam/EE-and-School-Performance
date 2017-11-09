@@ -1,0 +1,163 @@
+---
+title: "Test if Border District Identification Works"
+output: html_notebook
+---
+
+Steps:
+
++ Get database of all schools in Oregon entered.
++ Purge schools that are Charter, immersion or magnet schools.
++ Find districts that have schools that are both eligible and not eligible, i.e., border districts.
++ Of that group see if there are schools with installed EE measures.
++ Find districts with treated schools
++ Find only schools in border districts that have treated schools
+
+# All Schools
+
+```{r}
+# All schools with eligibility status
+ 
+AllSchools <- read.csv("https://docs.google.com/spreadsheets/d/1WXNu3cNY4DyZ7yWXT2MPd3bd61M0Vmo2ty62Uux1TZU/pub?gid=1048793783&single=true&output=csv")
+
+```
+
+# Purging unusual schools
+
+```{r}
+library(dplyr)
+library(stringr)
+
+
+AllSchools %>% 
+  mutate(Charter = str_detect(School.Name, "Charter")) %>%
+  mutate(Immersion = str_detect(School.Name, "Immersion")) %>%
+  mutate(Magnet = str_detect(School.Name, "Magnet")) -> AllSchools
+
+summary(AllSchools)
+
+```
+
+
+Notice that school names are not unique.
+
+Remove the charters and others.
+
+```{r}
+AllSchools %>% 
+  filter (Charter == FALSE & Immersion == FALSE  & Magnet == FALSE) -> AllSchools
+```
+
+The notes indicate that some schools need to be purged
+
++ "Housed at"
++ "shared campus"
++ "not own"
++ "not owned"
+
+
+```{r}
+AllSchools %>%
+  mutate(SpecialPurge = str_detect(Notes, "Housed at") |
+           str_detect(Notes, "shared campus") |
+           str_detect(Notes, "not own") | 
+           str_detect(Notes, "not owned")) -> AllSchools
+
+AllSchools %>% 
+  filter (SpecialPurge == FALSE) -> AllSchools
+```
+
+
+# Find Border Districts
+
+```{r}
+AllSchools %>% 
+  group_by(District.ID, District.Name) %>%
+  count(SB.1149.Eligibility) %>%
+  group_by(District.ID, District.Name) %>%
+  count() %>%
+  filter(nn >1) -> BorderDistricts
+
+```
+
+Only schools in Border Districts
+
+```{r}
+AllSchools %>%
+  inner_join(BorderDistricts) -> BorderSchools
+
+```
+
+# Find the schools in this group with EEMs
+
+
+All EEMs load
+```{r}
+
+EEMs <-read.csv("https://docs.google.com/spreadsheets/d/15X3x4KCEx2-_JYLjq3gXhqS33EKBscW_LLPO-MggDFk/pub?gid=1734037341&single=true&output=csv")
+
+
+```
+
+
+Find unique schools with EEMs
+
+```{r}
+EEMs %>% 
+  select(FacilityODEId) %>%
+  unique() -> TreatedSchoolIDs
+
+TreatedSchoolIDs$Treated <- TRUE
+
+```
+
+Tag the border schools that have had EEMs
+
+```{r}
+left_join(BorderSchools, TreatedSchoolIDs, by = c("School.ID" = "FacilityODEId" )) %>%
+  mutate(Treated = if_else(Treated == TRUE, TRUE, FALSE, missing=FALSE)) -> BorderSchools
+  
+
+```
+
+
+# Districts with treated schools
+
+```{r}
+BorderSchools %>% 
+  filter(Treated == TRUE) %>%
+  group_by(District.ID, District.Name) %>%
+  count(Treated) %>%
+  select(District.ID,District.Name,n)
+  arrange(n)
+
+```
+
+Keep only schools  within districts that have a school that has been treated.
+
+
+```{r}
+BorderSchools %>% 
+  filter(Treated == TRUE) %>%
+  group_by(District.ID, District.Name) %>%
+  count(Treated) %>% 
+  filter(n >0) %>%
+  select(District.ID,District.Name)-> WithTreated
+
+BorderSchools %>%
+  semi_join(WithTreated) -> TreatedDistrictSchools
+
+summary(TreatedDistrictSchools)
+```
+```{r}
+
+table(TreatedDistrictSchools$SB.1149.Eligibility,TreatedDistrictSchools$Treated)
+
+```
+
+# Merge in treatment dates and details
+
+# Merge in test scores
+
+# Choose school characteristics for comparability
+
+

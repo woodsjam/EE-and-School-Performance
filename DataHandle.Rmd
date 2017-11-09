@@ -272,6 +272,22 @@ SchoolsWEEM
 ```
 
 
+We need to purge the charter and special schools.  Charter schools have charter in the name so it is easy
+
+```{r}
+library(dplyr)
+library(stringr)
+
+str_detect(SchoolsWEEM$School.Name, "Charter") %>% table()
+
+SchoolsWEEM %>% 
+  mutate(Charter = str_detect(School.Name, "Charter")) %>%
+  filter(Charter == FALSE) ->SchoolsWEEM
+
+
+```
+
+
 Now, lets see if we have schools of the same type, elementary, middle etc, within the same district that are not eligible.
 
 ```{r}
@@ -293,9 +309,11 @@ SchoolsWEEM %>%
   
 Eligible %>% 
   filter(SB.1149.Eligibility == "NO") %>%
-  right_join(SchoolsWEEM, c("District.ID"= "District.ID", "School.Type"="School.Type")) -> SameTypeBorder
+  right_join(SchoolsWEEM, c("District.ID"= "District.ID", "School.Type" = "School.Type")) %>%
+  filter(!is.na(ESD) ) -> SameTypeBorder
 
 SameTypeBorder
+
 
 ```
 
