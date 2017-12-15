@@ -15,6 +15,8 @@ Steps:
 # All Schools
 
 ```{r}
+library(dplyr)
+library(tidyr)
 # All schools with eligibility status
  
 AllSchools <- read.csv("https://docs.google.com/spreadsheets/d/1WXNu3cNY4DyZ7yWXT2MPd3bd61M0Vmo2ty62Uux1TZU/pub?gid=1048793783&single=true&output=csv")
@@ -127,7 +129,7 @@ BorderSchools %>%
   filter(Treated == TRUE) %>%
   group_by(District.ID, District.Name) %>%
   count(Treated) %>%
-  select(District.ID,District.Name,n)
+  select(District.ID,District.Name,n) %>%
   arrange(n)
 
 ```
@@ -155,6 +157,44 @@ table(TreatedDistrictSchools$SB.1149.Eligibility,TreatedDistrictSchools$Treated)
 ```
 
 # Merge in treatment dates and details
+
+
+Check and see how many with multiple implementations.
+
+```{r}
+
+EEMs %>%
+  select(FacilityName, FacilityODEId, ImplementedYear,ImplementedMonth) %>%
+  unique() %>%
+  group_by(FacilityName, FacilityODEId) %>%
+  count() %>%
+  arrange()
+
+
+```
+
+Looking into the dates and seeing if I can put them into school years
+
+```{r}
+EEMs %>%
+  mutate(SchoolYearImplemented = ifelse(ImplementedMonth<=10, ImplementedYear,ImplementedYear + 1 )) -> EEMs
+
+```
+
+Now start getting into the placebo effects.  Need to categorize if the EEMs should have an educational effect.
+
+Going to have to do these one-by-one based on "AuditMeasureUserSuppliedDescription", "MeasureDescription", "MeasureClassDescription" field.
+
+General principles for placebo:
+
++ Boilers
++ Gym
++ VFD
++ Occupancy sensors w/o daylighting
++ pipes
++ Steam traps
++ Exterior lamps
++ exit signs
 
 # Merge in test scores
 

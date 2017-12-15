@@ -1,0 +1,363 @@
+---
+title: "The Effect of Energy Efficiency Measures on K12 Educational Performance"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Background
+
+# The Broad Overview
+
+# SB 1149
+
++ [SB 1149 (1999)](https://www.oregonlegislature.gov/bills_laws/lawsstatutes/1999orLaw0865.html) was Oregon's deregulation bill.
+    + It was part of the implementation of FERC 888.
+    + Established a public purpose charge that funds thing like The Energy Trust of Oregon.
++ The 3% Public Purpose Charge was collected by _almost_ all the IOUs.
+    + Pacificorp and PGE collect, but Idaho Power in Eastern Oregon does not.
+    + Used for Energy Efficiency
+    + 10% must be used in schools.
+    
+# Schools Program    
+
+Schools using SB 1149 public purpose funds:
+
++ Complete energy audits of _buildings_, not districts, served by Pacificorp or PGE (with limitations);
++ Audits must be completed by an approved audit company;
++ Implement the approved Energy Efficiency Measures identified in the audits;
++ Report Energy Use Index data in the Schools Interactive Database each year; 
+
+Details are later ...
+
+# Key Points
+
++ Not all districts are eligible.
++ Not all schools within districts are eligible.
+
+
+Makes it easier to establish a natural control group for any treated school by using others in the district.
+
+# Educational Funding in Oregon
+
+Oregon Educational Funding has key provisions that makes using schools in other district more attractive than other states.
+
++ 1991 Oregon establishes an Equalization Formula:
+    + The legislature establishes a biennial K12 State School Fund Budget
+    + The State School Fund budget is distributed equally by student across the state, but adjusted for property tax collections.
+    + $1 increase in property tax collected results in $1 less in State School Fund support.
++ Result, equal, per-student funding across the state with a few exceptions:
+    + Short-term, 3 year, property tax operating levies.
+    + Capital bonds
+    + A few, depends on year, school districts with few students but lots of taxable property.
+
+Much smaller inter-district funding differences than other states.
+
+# School District Size
+
++ Oregon has 197 school districts for ~500K students.
+    + Washington has 296 for ~1M students
++ The three largest school districts, Portland Public, Salem-Keizer, and  Beaverton are about 40K each.
+    + Washington has 9 over 20K
++ The remainder are small.
+
+Less opportunity for intra-district funding differences but need to watch the big three.
+
+# Key Points
+
++ Management and salary levels may be different across districts 
++ There are fewer haves and have nots within and between districts than other states.
+
+We can feel more comfortable using schools out of district for controls given equal funding.
+
+# The Energy Efficiency Measures (EEMs)
+
+Mostly what you would expect
+
++ Building Envelope, including windows and insulation.
++ HVAC Components  
++ HVAC Controls
++ Pumps, Motors and Drives
++ Domestic Hot Water
++ Lighting
++ Kitchen Equipment
++ Other (Pool Covers ...)
+
+# What Should Strike you About the List
+
++ Most of the items you would never notice unless you were an expert looking  or listening for them.
++ There are a few that could have an impact on the educational environment.
+    + Double or Triple Glazed Windows ( Sound, Moisture Control)
+    + Cavity Insulation (Sound, Moisture Control)
+    + Lighting Quality Improvements (Daylighting)
+
+
+# Key Points
+
++ Treated schools may or may not have educationally impactful EEMs.
++ Treated schools could have a mix.
+
+The non-impactful EEMs can provide a placebo effect robustness check on the effects of the impactful EEMs on educational performance.
+
+# How to Measure Educational Impact
+
++ Some of the measures produce environmental improvements, less moisture, mold, we can look at the effect on attendance.
+    + Recorded annually for each school.
+    + Intermediate indicator.  The more often you go to school the better you do.
++ Environmental Improvements can reduce teacher absenteeism.
+    + Counts not recorded but expenditures on substitutes are a budget item that can be observed.
++ Some produce better learning environments, less distraction.  We can use the annual standardized testing results.
+    + Everyone in the same grade takes the same test, but the test, and the levels can be different from year-to-year.
+
+# Key Points
+
++ Test scores are the main indicator but for some EEMs, absenteeism and attendance may be good predictors.
++ We have some candidates for instruments if we wish to take that route.
+
+
+# Data Details
+
+# Schools Program Audit Requirements
+
++ Non-educational buildings and those that are rented or will close in 5 years are ineligble.
++ Energy Audits are required
+    + Whole Building audits, similar to ASHRAE Level 2.  Identify EEMs with 50 year payback or less.
+    + Multi-component payback is 
+    + Targeted Audits are acceptable for limited scope.
+    + Target is 47/48 kBTU/SF/Year for elementary and 61/62 kBTU/SF/Year for High Schools 
++ Multi-compenent payback calculations are allowed.
+
+# School Program Implementation
+
++ The maximum amount of PPC funds reimbursed will be capped at the total annual savings multiplied by the Measure Life caped at cost.
++ Common for some cost to not be funded.
++ Commissioning is required for:
+    + All boiler or chiller measures exceeding $100,000
+    + All other HVAC measures and all HVAC controls measures exceeding $50,000
+    + All lighting control measures exceeding $100,000
+    + Other measures in which commissioning is critical for successful implementation and operation of the measure, as deemed appropriate by the auditor.
+
+# Required Annual Reporting
+
++ Annual energy expenses by fuel type
++ Square footage
++ Hours of operation
+
+# Summary of Measures
+
+```{r InstallByYear, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+EEMs <-read.csv("https://docs.google.com/spreadsheets/d/15X3x4KCEx2-_JYLjq3gXhqS33EKBscW_LLPO-MggDFk/pub?gid=1734037341&single=true&output=csv")
+
+library(dplyr)
+library(knitr)
+
+EEMs %>% select(Year  = ImplementedYear) %>% 
+  group_by(Year) %>%
+   summarize(Installations = n()) %>%
+  kable()
+```
+
+Note spikes in installation.
+
+# Types of Installed Measures
+
+```{r InstallTypes, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
+  group_by(EEM) %>%
+  summarize(Installations = n()) %>% 
+  kable()
+
+```
+
+# Comments
+
++ Controls are frequently occupancy sensors and daylighting controls
++ Fixtures are described in detail later as gym, exterior, etc.
+
+# Electric Utilities
+
+![BPA 2015](https://www.bpa.gov/news/pubs/maps/OregonUtils.pdf)
+
+# Oregon is a mix
+
++ Most of population is served by IOUs
++ Large tracts of COUs
++ Only Pacificorp and PGE schools are eligible.
+
+# Districts with Eligible Schools
+
+```{r BuildBorderDistricts, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+AllSchools <- read.csv("https://docs.google.com/spreadsheets/d/1WXNu3cNY4DyZ7yWXT2MPd3bd61M0Vmo2ty62Uux1TZU/pub?gid=1048793783&single=true&output=csv")
+library(dplyr)
+library(stringr)
+
+
+AllSchools %>% 
+  mutate(Charter = str_detect(School.Name, "Charter")) %>%
+  mutate(Immersion = str_detect(School.Name, "Immersion")) %>%
+  mutate(Magnet = str_detect(School.Name, "Magnet")) -> AllSchools
+
+AllSchools %>% 
+  filter (Charter == FALSE & Immersion == FALSE  & Magnet == FALSE) -> AllSchools
+
+AllSchools %>%
+  mutate(SpecialPurge = str_detect(Notes, "Housed at") |
+           str_detect(Notes, "shared campus") |
+           str_detect(Notes, "not own") | 
+           str_detect(Notes, "not owned")) -> AllSchools
+
+AllSchools %>% 
+  filter (SpecialPurge == FALSE) -> AllSchools
+
+AllSchools %>% 
+  group_by(District.ID, District.Name) %>%
+  count(SB.1149.Eligibility) %>%
+  group_by(District.ID, District.Name) %>%
+  count() %>%
+  filter(nn >1) -> BorderDistricts
+```
+
+```{r MapBoarderDistricts, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(maptools)
+Sto <- gpclibPermit()
+
+Schools <- readShapePoly("../MapData/cb_2016_41_unsd_500k/cb_2016_41_unsd_500k.shp")
+
+library(ggmap)
+
+mapImage <- get_map(location = "oregon", zoom = 7, maptype = "toner")
+
+
+library(RColorBrewer)
+colors <- brewer.pal(9, "BuGn")
+
+# Subset SchoolBound so only eligible districts
+# 
+
+
+Split <- function(x) { last(str_split(x, boundary("word"))[[1]])
+}
+
+SplitV <- Vectorize(Split)
+
+
+
+DistNumbers <- SplitV(as.character(BorderDistricts$District.Name))
+
+# Fix so that only the eligible districts show.
+#Schools@data$NAME
+
+SchoolBound <- fortify(Schools)
+
+
+ggmap(mapImage) 
+# +
+#   geom_polygon(aes(x = long,
+#                    y = lat,
+#                    group = group),
+#                data = SchoolBound,
+#                color = colors[9],
+#                fill = colors[6],
+#                alpha = 0.5) +
+#   labs(x = "Longitude",
+#        y = "Latitude")
+# 
+
+```
+
+
+# Identification Strategy One
+
++ Treatment schools, have had EEMs
++ Control schools:
+    + Same district
+    + Same level, e.g., elementary.
+    + Synthetic control based on student population characteristics
++ No charter, immersion, shared campuses, or magnet schools    
+    
+# How Many District? Schools?
+
+```{r EligibleSchools, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+AllSchools <- read.csv("https://docs.google.com/spreadsheets/d/1WXNu3cNY4DyZ7yWXT2MPd3bd61M0Vmo2ty62Uux1TZU/pub?gid=1048793783&single=true&output=csv")
+
+AllSchools %>% 
+  mutate(Charter = str_detect(School.Name, "Charter")) %>%
+  mutate(Immersion = str_detect(School.Name, "Immersion")) %>%
+  mutate(Magnet = str_detect(School.Name, "Magnet")) -> AllSchools
+
+AllSchools %>% 
+  filter (Charter == FALSE & Immersion == FALSE  & Magnet == FALSE) -> AllSchools
+
+AllSchools %>%
+  mutate(SpecialPurge = str_detect(Notes, "Housed at") |
+           str_detect(Notes, "shared campus") |
+           str_detect(Notes, "not own") | 
+           str_detect(Notes, "not owned")) -> AllSchools
+
+AllSchools %>% 
+  filter (SpecialPurge == FALSE) -> AllSchools
+
+AllSchools %>% 
+  group_by(District.ID, District.Name) %>%
+  count(SB.1149.Eligibility) %>%
+  group_by(District.ID, District.Name) %>%
+  count() %>%
+  filter(nn >1) -> BorderDistricts
+
+AllSchools %>%
+  inner_join(BorderDistricts) -> BorderSchools
+
+EEMs %>% 
+  select(FacilityODEId) %>%
+  unique() -> TreatedSchoolIDs
+
+TreatedSchoolIDs$Treated <- TRUE
+
+left_join(BorderSchools, TreatedSchoolIDs, by = c("School.ID" = "FacilityODEId" )) %>%
+  mutate(Treated = if_else(Treated == TRUE, TRUE, FALSE, missing=FALSE)) -> BorderSchools
+  
+BorderSchools %>% 
+  filter(Treated == TRUE) %>%
+  group_by(District.ID, District.Name) %>%
+  count(Treated) %>% 
+  filter(n >0) %>%
+  select(District.ID,District.Name)-> WithTreated
+
+BorderSchools %>%
+  semi_join(WithTreated) -> TreatedDistrictSchools
+
+##
+AllSchools %>% 
+  filter(SB.1149.Eligibility == "YES") %>%
+  select(District.ID) %>%
+  unique() %>%
+  nrow() -> EligibleDistricts
+
+AllSchools %>% 
+  filter(SB.1149.Eligibility == "YES") %>%
+  select(School.ID) %>%
+  unique() %>%
+  nrow() -> EligibleSchools
+```
+
++ Eligible 
+    + Districts: `r EligibleDistricts` 
+    + Schools: `r EligibleSchools`
++ Boarder (Eligible and ineligible schools in district)
+    + Districts: `r nrow(BorderDistricts)`
+    + With treated schools: `r nrow(WithTreated)`
++ Schools in Border Districts : `r nrow(BorderSchools)`
+    + Eligible untreated:
+    + Eligible treated:
+    + Ineligible: 
++ Schools in Border Districts with treated schools :
+    + Eligible untreated:
+    + Eligible treated:
+    + Ineligible:     
+    
+
