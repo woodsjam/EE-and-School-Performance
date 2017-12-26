@@ -1,15 +1,117 @@
 ---
 title: "The Effect of Energy Efficiency Measures on K12 Educational Performance"
 output: beamer_presentation
+bibliography: ../Bibliography.bib
+citation_package: natbib
+biblio-style: "apalike"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+# Abstract
+
+
+This is early work.  Still much to do.
+
 # Background
 
-# The Broad Overview
++ Cost effectiveness evaluation requires an evaluation of _all_ costs and _all_ benefits.
++ Not all jurisdictions use "participant benefits" in evaluation of cost effectiveness because they are not enjoyed by the rate payer.  
++ The "National Efficiency Screening Project" only gives guidance on including non-energy benefits as it explains the symmetry principal, "If you include participant benefits, include participant costs".
++ Some jurisdictions, e.g., The Energy Trust of Oregon, are reducing the technical complexity of evaluations to _reduce evaluation costs_
+
+# "Reduced Technical Complexity"
+
++ Free ridership/drivership by survey, "Would you have done this without ETO incentives?"
+    + Assume people tell the truth.
+    + Economists don't believe that.
++ Simpler econometrics
+    + No accounting for self-selection bias.
+    + No accounting for sampling bias.
+    + Stops  'futzing'
+    
+In short, the opposite of what economics is doing with program evaluation, but more inline with engineering approach.
+
+# Why the Effect of Energy Efficency on Education is Interesting
+
++ Decisions to improve structures is a financial decision -- money saved on energy.
++ No financial gain, not allowed to participate.
+
+Improvements in student/staff health and the lifetime effects of academic performance dwarf the value of energy savings.
+
+# Daylighting (Sampling)
+
++ D. A. Kleiber and others. “Environmental Illumination and Human
+Behavior: The Effects of Spectrum of Light Source on Human Performance in a
+University Setting.” (1973)
+    + 3 schools  
+    + Movement to portables.
+    + 17% drop
+
++ L. Heschong. “Daylighting in Schools: An Investigation into the
+Relationship between Daylighting and Human Performance. Detailed Report.”
+(1999).
+    + "Data indicate students with the most classroom daylighting progressed 20 percent faster on math tests and 26 percent on reading tests in one year than those with the least."
+    + No control for self-selection
+    + ~20,000 schools
+
+# 
+
++ L. Heschong, R. L. Wright and S. Okura. “Daylighting impacts on human
+performance in school”. In: _Journal of the Illuminating Engineering
+Society_ 31.2 (2002), pp. 101-114.
+    + Positive effect. Scale is dubious.
+    + Multiple school districts with various quality of daylighting.
+    
+
++ M. H. Nicklas and G. B. Bailey. “Analysis of the Performance of
+Students in Daylit Schools.” (1996).
+    + "... [daylit] schools outperformed students attending artificially lighted
+schools by 5 to 14 percent."
+
+# Indoor Air Quality (Sampling)
+
++ M. J. Mendell and G. A. Heath. “Do indoor pollutants and thermal
+conditions in schools influence student performance? A critical review of
+the literature”. In: _Indoor air_ 15.1 (2005), pp. 27-52.
+    + Not all that critical( Three studies of students, x2 from 70s)
+    + Summary, something is there but we don't know what it is.
+
++ S. Moonie, D. A. Sterling, L. W. Figgs, et al. “The relationship
+between school absence, academic performance, and asthma status”. In:
+_Journal of School Health_ 78.3 (2008), pp. 140-148.
+    + 3K students
+    + More absences, lower test scores.
+    + Asthma kids have more absences but not lower scores with same absences.
+
+#
+
++ U. Haverinen-Shaughnessy, D. Moschandreas and R. Shaughnessy.
+“Association between substandard classroom ventilation rates and students’
+academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
+    + Schools with less than 7.1 l/s/person, i.e., less than ASHRAE Standard 62 in 2004.
+    + "...[1 l/s per person] increase in the ventilation rate within that range, the proportion of students passing standardized test (i.e., scoring satisfactory or above) is expected to increase by 2.9% (95%CI 0.9–4.8%) for math and 2.7% (0.5–4.9%) for reading."
+
+# In Short
+
++ Students got stuck in the 60s-70s air conditioning daylighting vs air conditioning battle.
++ Air quality is important but we don't know exactly what part
+    + Keep in mind that allergenic mold concentrations, colony forming bodies, can change by factor of 10 in a few hours.
+    + Hard to measure.
+      
+# Why Oregon Schools?
+
++ Nice features that remove many, but not all, self-selection problems.
++ Decison making cutoffs are based on energy savings, not educational outcomes.
+
++ Still problems
+    + Data shortcoming ... as we go along.
+    + Standardized tests are not standard from year to year.
+    + Building data is not so important to departments of education.
+
+Now, on to the data ...
 
 # SB 1149
 
@@ -30,7 +132,6 @@ Schools using SB 1149 public purpose funds:
 + Implement the approved Energy Efficiency Measures identified in the audits;
 + Report Energy Use Index data in the Schools Interactive Database each year; 
 
-Details are later ...
 
 # Key Points
 
@@ -48,6 +149,8 @@ Oregon Educational Funding has key provisions that makes using schools in other 
     + The legislature establishes a biennial K12 State School Fund Budget
     + The State School Fund budget is distributed equally by student across the state, but adjusted for property tax collections.
     + $1 increase in property tax collected results in $1 less in State School Fund support.
+    + Measure 5 and 50 property tax limitations put most of the power with the legislature.
+    
 + Result, equal, per-student funding across the state with a few exceptions:
     + Short-term, 3 year, property tax operating levies.
     + Capital bonds
@@ -121,13 +224,13 @@ The non-impactful EEMs can provide a placebo effect robustness check on the effe
 
 # Schools Program Audit Requirements
 
-+ Non-educational buildings and those that are rented or will close in 5 years are ineligble.
++ Non-educational buildings and those that are rented or will close in 5 years are ineligible.
 + Energy Audits are required
     + Whole Building audits, similar to ASHRAE Level 2.  Identify EEMs with 50 year payback or less.
-    + Multi-component payback is 
+    + Multi-component payback is allowed
     + Targeted Audits are acceptable for limited scope.
     + Target is 47/48 kBTU/SF/Year for elementary and 61/62 kBTU/SF/Year for High Schools 
-+ Multi-compenent payback calculations are allowed.
++ Multi-competent payback calculations are allowed.
 
 # School Program Implementation
 
@@ -173,7 +276,7 @@ EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
 
 # Comments
 
-+ Controls are frequently occupancy sensors and daylighting controls
++ Controls are frequently occupancy sensors and day-lighting controls
 + Fixtures are described in detail later as gym, exterior, etc.
 
 # Electric Utilities
@@ -269,16 +372,7 @@ ggmap(mapImage)
 
 ```
 
-
-# Identification Strategy One
-
-+ Treatment schools, have had EEMs
-+ Control schools:
-    + Same district
-    + Same level, e.g., elementary.
-    + Synthetic control based on student population characteristics
-+ No charter, immersion, shared campuses, or magnet schools    
-    
+ 
 # How Many District? Schools?
 
 ```{r EligibleSchools, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
@@ -348,16 +442,34 @@ AllSchools %>%
 + Eligible 
     + Districts: `r EligibleDistricts` 
     + Schools: `r EligibleSchools`
-+ Boarder (Eligible and ineligible schools in district)
++ Border (Eligible and ineligible schools in district)
     + Districts: `r nrow(BorderDistricts)`
     + With treated schools: `r nrow(WithTreated)`
 + Schools in Border Districts : `r nrow(BorderSchools)`
-    + Eligible untreated:
-    + Eligible treated:
-    + Ineligible: 
-+ Schools in Border Districts with treated schools :
-    + Eligible untreated:
-    + Eligible treated:
-    + Ineligible:     
+    + Eligible untreated: `r  table(BorderSchools$SB.1149.Eligibility)[2] - table(BorderSchools$Treated)[2]`
+    + Eligible treated: `r table(BorderSchools$Treated)[2]`
+    + Ineligible: `r table(BorderSchools$SB.1149.Eligibility)[1]`
++ Schools in Border Districts with treated schools : `r nrow(TreatedDistrictSchools)`
+    + Eligible untreated: `r  table(TreatedDistrictSchools$SB.1149.Eligibility)[2] - table(TreatedDistrictSchools$Treated)[2]`
+    + Eligible treated: `r table(TreatedDistrictSchools$Treated)[2]`
+    + Ineligible: `r table(TreatedDistrictSchools$SB.1149.Eligibility)[1]`    
     
+
+
+
+# How Different are Treated, Untreated and Ineligible schools?
+
+Ideally, there should be no _obserable_ difference. As close as you can get to random assignment.
+
++ Dimensions:
+    + Student population, free and reduced rate, ethnicity, etc.
+    + Test scores
+    + Facility characteristics
++ Problems:
+    + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
+    + Material that was in the report is only available for audited buildings in schools.
+    + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
+    + Elementary near my house has 4.
+
+
 
