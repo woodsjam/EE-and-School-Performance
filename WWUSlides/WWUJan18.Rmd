@@ -456,6 +456,26 @@ AllSchools %>%
     
 
 
+# Getting at Causality, the Identification Problem
+
+# Methods
+
++ Corsened exact matching
+    + Define what you mean by close enough match
+    + Find the close enough match on observable dimensions
+    + Excluded treated with no match
++ Synthetic control method
+    + Mix of differences in differences and matching
+
+
+# Matching Options
+
+Control group composed of ineligible schools
+
++ Only within district or not
++ Variables to use with matching
++ Additional variable for matches outside of district
+
 
 # How Different are Treated, Untreated and Ineligible schools?
 
