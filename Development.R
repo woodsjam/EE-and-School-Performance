@@ -1,3 +1,4 @@
+
 # Enrollment Reports
 # 
 
@@ -34,45 +35,45 @@ Membership17$Year <- 2017
 
 # Create common colum names for  data we need
 # 
-                                             
-CommonNames1217<-  c("DistrictID"              
-,"District"                                       
-,"SchoolID"                
-,"School"                                         
-,"PrevEnrollment"                       
-,"Enrollment"                       
-,"Male"                                  
-,"PercentMale"                             
-,"Female"                                 
-,"PercentFemale"                            
-,"AmericanIndianAlaskaNative"         
-,"PercentAmericanIndianAlaskaNative"    
-,"Asian"                                  
-,"PercentAsian"                             
-,"NativeHawaiianPacificIslander"      
-,"PercentNativeHawaiianPacificIslander"
-,"AfricanAmerican"                 
-,"PercentAfricanAmerican"           
-,"Hispanic"                       
-,"PercentHispanic"                  
-,"White"                                  
-,"PercentWhite"                            
-,"Multiracial"                            
-,"PercentMultiracial"                       
-,"Kindergarten"                           
-,"GradeOne"                              
-,"GradeTwo"                              
-,"GradeThree"                            
-,"GradeFour"                             
-,"GradeFive"                             
-,"GradeSix"                              
-,"GradeSeven"                            
-,"GradeEight"                            
-,"GradeNine"                             
-,"GradeTen"                              
-,"GradeEleven"                           
-,"GradeTwelve"                           
-,"Year") 
+
+CommonNames1217 <-  c("DistrictID"              
+                      ,"District"                                       
+                      ,"SchoolID"                
+                      ,"School"                                         
+                      ,"PrevEnrollment"                       
+                      ,"Enrollment"                       
+                      ,"Male"                                  
+                      ,"PercentMale"                             
+                      ,"Female"                                 
+                      ,"PercentFemale"                            
+                      ,"AmericanIndianAlaskaNative"         
+                      ,"PercentAmericanIndianAlaskaNative"    
+                      ,"Asian"                                  
+                      ,"PercentAsian"                             
+                      ,"NativeHawaiianPacificIslander"      
+                      ,"PercentNativeHawaiianPacificIslander"
+                      ,"AfricanAmerican"                 
+                      ,"PercentAfricanAmerican"           
+                      ,"Hispanic"                       
+                      ,"PercentHispanic"                  
+                      ,"White"                                  
+                      ,"PercentWhite"                            
+                      ,"Multiracial"                            
+                      ,"PercentMultiracial"                       
+                      ,"Kindergarten"                           
+                      ,"GradeOne"                              
+                      ,"GradeTwo"                              
+                      ,"GradeThree"                            
+                      ,"GradeFour"                             
+                      ,"GradeFive"                             
+                      ,"GradeSix"                              
+                      ,"GradeSeven"                            
+                      ,"GradeEight"                            
+                      ,"GradeNine"                             
+                      ,"GradeTen"                              
+                      ,"GradeEleven"                           
+                      ,"GradeTwelve"                           
+                      ,"Year") 
 
 
 
@@ -97,11 +98,6 @@ Membership11 %>% select(-contains("%")) -> Membership11
 
 
 
-## Start here with new names  Remember the space problem
-## 
-
-
-
 Membership10 %>%
   rename(
     DistrictID = "Attnd\nDistInstID",
@@ -110,7 +106,7 @@ Membership10 %>%
     Male = "2009-10 Male",                                    
     Female ="2009-10\nFemale",                                                      
     AmericanIndianAlaskaNative="2009-10\nAmerican Indian/Alaskan Native\n(Non-Hispanic)",                  
-
+    
     AfricanAmerican= "2009-10\nBlack/African American\n(Non-Hispanic)",
     Hispanic= "2009-10\nHispanic/Latino",                                                 
     White = "2009-10\nWhite\n(Non-Hispanic)",                                           
@@ -130,11 +126,11 @@ Membership10 %>%
     GradeEleven = "2009-10 Grade Eleven",                                                     
     GradeTwelve = "2009-10 Grade Twelve",                                                     
     NativeHawaiianPacificIslander = `For Future Reference\n2009-10\nPacific Islander\n(Non-Hispanic)`,
-
+    
     Asian = `For Future Reference\n2009-10\nAsian\n(Non-Hispanic)`
-    ) %>%
+  ) %>%
   select( -contains("2009-10")) -> Membership10
-  
+
 Membership10$PrevEnrollment <- NA
 
 Membership11 %>% 
@@ -145,7 +141,7 @@ Membership11 %>%
           Male = "2010-11 Male",                                                                  
           Female = "2010-11 Female",                                                                
           AmericanIndianAlaskaNative = "2010-11\nAmerican Indian/Alaskan Native\n(Non-Hispanic)",                       
-                   
+          
           AfricanAmerican = "2010-11\nBlack/African American\n(Non-Hispanic)",                              
           Hispanic = "2010-11\nHispanic/Latino",                                                      
           White = "2010-11\nWhite\n(Non-Hispanic)",                                                
@@ -164,7 +160,7 @@ Membership11 %>%
           GradeEleven = "2010-11\nGrade Eleven",                                                         
           GradeTwelve = "2010-11\nGrade Twelve",                                   
           Asian = "For Future Reference\n2010-11\nAsian only\n(Non-Hispanic)", 
-
+          
           NativeHawaiianPacificIslander  = "2010-11\nAsian/Pacific Islander\n(Non-Hispanic)",            
           Year  = "Year" 
   ) %>%   
@@ -194,5 +190,3 @@ Membership <- bind_rows(Membership10, Membership11, Membership12, Membership13, 
 
 # Clean space
 remove(Membership10, Membership11, Membership12, Membership13, Membership14, Membership15, Membership16, Membership17, CommonNames1217)
-
-
