@@ -481,7 +481,7 @@ AllSchools %>%
 
 library(readr)
 
-FreeReduced <- read_csv("FreeReducedLunch/StudentsEligibleforFreeorReducedLunc46.CSV")
+FreeReduced <- read_csv("../FreeReducedLunch/StudentsEligibleforFreeorReducedLunc46.CSV")
 
 library(dplyr)
 
@@ -541,21 +541,21 @@ library(readxl)
 
 # Read in from local.  Error in http read so resorted to this.
 
-Membership10 <- read_excel("MembershipReport/fallmembershipreport_20092010.xls", sheet = "School")
+Membership10 <- read_excel("../MembershipReport/fallmembershipreport_20092010.xls", sheet = "School")
 
-Membership11 <- read_excel("MembershipReport/fallmembershipreport_20102011.xls", sheet = "School (Final)")
+Membership11 <- read_excel("../MembershipReport/fallmembershipreport_20102011.xls", sheet = "School (Final)")
 
-Membership12 <- read_excel("MembershipReport/fallmembershipreport_20112012.xls", sheet = "School (Final)")
+Membership12 <- read_excel("../MembershipReport/fallmembershipreport_20112012.xls", sheet = "School (Final)")
 
-Membership13 <- read_excel("MembershipReport/fallmembershipreport_20122013.xls", sheet = "School (Final)")
+Membership13 <- read_excel("../MembershipReport/fallmembershipreport_20122013.xls", sheet = "School (Final)")
 
-Membership14 <- read_excel("MembershipReport/fallmembershipreport_20132014.xls", sheet = "School (1314)")
+Membership14 <- read_excel("../MembershipReport/fallmembershipreport_20132014.xls", sheet = "School (1314)")
 
-Membership15 <- read_excel("MembershipReport/fallmembershipreport_20142015.xls", sheet = "School (1415)")
+Membership15 <- read_excel("../MembershipReport/fallmembershipreport_20142015.xls", sheet = "School (1415)")
 
-Membership16 <- read_excel("MembershipReport/fallmembershipreport_20152016.xlsx", sheet = "School (15-16)")
+Membership16 <- read_excel("../MembershipReport/fallmembershipreport_20152016.xlsx", sheet = "School (15-16)")
 
-Membership17 <- read_excel("MembershipReport/fallmembershipreport_20162017.xlsx", sheet = "School (16-17)")
+Membership17 <- read_excel("../MembershipReport/fallmembershipreport_20162017.xlsx", sheet = "School (16-17)")
 
 #Add year indicator to each dataframe
 #
