@@ -460,12 +460,44 @@ AllSchools %>%
 
 # Methods
 
-+ Corsened exact matching
-    + Define what you mean by close enough match
++ Corsened exact matching 
+    + Iacus, King, and Porro (2012)
+    + Define what you mean by close enough in multiple dimensions
     + Find the close enough match on observable dimensions
     + Excluded treated with no match
-+ Synthetic control method
++ Synthetic control method 
+    + Card, D. and A. Krueger (1994)
     + Mix of differences in differences and matching
+    + Weights basket of controls to achieve better results
+
+# Working With Data from ODE
+
++ Exercise in frustration
+    + Separate files per year
+    + Little consistency in names, actual data reported, format
+    + Non-existent documentation or institutional knowledge
+ 
+
+```{r}
+Schools16 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/17/RCmediaSchoolsAggregate.csv")
+Schools15 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/16/RCmediaSchoolsAggregate.csv")
+Schools14 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/15/RCmediaSchoolsAggregate.csv")
+Schools13 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/14/RCmediaSchoolsAggregate.csv")
+Schools12 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/13/RCmediaSchoolsAggregate.csv")
+Schools11 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/12/RCmediaSchoolsAggregate.csv")
+Schools10 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/11/RCmediaSchoolsAggregate.csv")
+Schools09 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/10/RCmediaSchoolsAggregate.csv")
+Schools08 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/09/RCmediaSchools.csv")
+Schools07 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/08/RCmediaSchools.csv")
+Schools06 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/07/RCmediaSchools.csv")
+Schools05 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/06/RCmediaSchools.csv")
+Schools04 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/05/RCmediaSchools.csv")
+Schools03 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/04/RCmedia.csv")
+
+
+
+```
+
 
 
 # Matching Options
@@ -474,7 +506,8 @@ Control group composed of ineligible schools
 
 + Only within district or not
 + Variables to use with matching
-+ Additional variable for matches outside of district
++ Additional variables for matches outside of district
+
 
 
 # How Different are Treated, Untreated and Ineligible schools?
@@ -489,7 +522,7 @@ Ideally, there should be no _obserable_ difference. As close as you can get to r
     + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
     + Material that was in the report is only available for audited buildings in schools.
     + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
-    + Elementary near my house has 4.
+    + Elementary near my house has 4 buildings but looks like only 2 .
 
 
 

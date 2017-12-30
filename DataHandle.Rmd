@@ -125,6 +125,146 @@ Schools05 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/06/RCmed
 Schools04 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/05/RCmediaSchools.csv")
 Schools03 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/04/RCmedia.csv")
 
+
+# Link the data and see what we need
+
+
+# Add year identifier for each
+Schools03$Year <- 2003
+Schools04$Year <- 2004
+Schools05$Year <- 2005
+Schools06$Year <- 2006
+Schools07$Year <- 2007
+Schools08$Year <- 2008
+Schools09$Year <- 2009
+Schools10$Year <- 2010
+Schools11$Year <- 2011
+Schools12$Year <- 2012
+Schools13$Year <- 2013
+Schools14$Year <- 2014
+Schools15$Year <- 2015
+Schools16$Year <- 2016
+
+# make the school identifiers uniform witth 16 name
+# 
+library(dplyr)
+
+Schools03 %>%
+  rename( School.ID = instid) -> Schools03
+
+Schools04 %>%
+  rename( School.ID = instid) -> Schools04
+
+Schools05 %>%
+  rename( School.ID = InstID) -> Schools05
+Schools06 %>%
+  rename( School.ID = InstID) -> Schools06
+Schools07 %>%
+  rename( School.ID = InstID) -> Schools07
+Schools08 %>%
+  rename( School.ID = InstID) -> Schools08
+Schools09 %>%
+  rename( School.ID = InstID) -> Schools09
+Schools10 %>%
+  rename( School.ID = InstID) -> Schools10
+Schools11 %>%
+  rename( School.ID = InstID) -> Schools11
+Schools12 %>%
+  rename( School.ID = InstID) -> Schools12
+
+Schools13 %>%
+  rename( School.ID = School.ID) -> Schools13
+Schools14 %>%
+  rename( School.ID = School.ID) -> Schools14
+Schools15 %>%
+  rename( School.ID = School.ID) -> Schools15
+Schools16 %>%
+  rename( School.ID = School.ID) -> Schools16
+
+
+#Make student count uniform with 16 names
+
+CheckName <- function(db) {is.element("Total.Enrollment",names(db))}
+
+# CheckName(Schools03)
+Schools03 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools03
+
+#CheckName(Schools04)
+Schools04 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools04
+
+#CheckName(Schools05)
+Schools05 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools05
+
+#CheckName(Schools06)
+Schools06 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools06
+
+#CheckName(Schools07)
+Schools07 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools07
+
+#CheckName(Schools08)
+Schools08 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools08
+
+#CheckName(Schools09)
+Schools09 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools09
+
+#CheckName(Schools10)
+Schools10 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools10
+
+#CheckName(Schools11)
+Schools11 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools11
+
+#CheckName(Schools12)
+Schools12 %>%
+  rename( Total.Enrollment = DailyMmbrshpAvgAmt1) -> Schools12
+
+#CheckName(Schools13)
+#CheckName(Schools14)
+#CheckName(Schools15)
+#CheckName(Schools16)
+
+#Make the name checks faster
+AllYearly <- list(Schools03,Schools04, Schools05, Schools06, Schools07, Schools08, Schools09, Schools10, Schools11, Schools12, Schools13, Schools14, Schools15, Schools16)
+
+CheckName <- function(RName,db) {is.element(RName,names(db))}
+
+#lapply(AllYearly, FUN = function(x)CheckName("Total.Enrollment",x))
+
+
+# Pct.Ever.English.Learners
+lapply(AllYearly, FUN = function(x)CheckName("Pct.Ever.English.Learners",x))
+#fix 3-10
+
+Schools03 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools03
+Schools04 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools04
+Schools05 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools05
+Schools06 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools06
+Schools07 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools07
+Schools08 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools08
+Schools09 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools09
+Schools10 %>%
+  rename( Pct.Ever.English.Learners = ESLStudPct) -> Schools10
+
+# Pct.Economically.Disadvantaged
+lapply(AllYearly, FUN = function(x)CheckName("Pct.Economically.Disadvantaged",x))
+#fix 3-10
+
+
 ```
 
 # Linking Data
