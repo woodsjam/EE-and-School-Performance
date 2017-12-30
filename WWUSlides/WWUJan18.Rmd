@@ -108,7 +108,7 @@ academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
 
 + Still problems
     + Data shortcoming ... as we go along.
-    + Standardized tests are not standard from year to year.
+    + Standardized tests are not standard from year-to-year.
     + Building data is not so important to departments of education.
 
 Now, on to the data ...
@@ -210,7 +210,7 @@ The non-impactful EEMs can provide a placebo effect robustness check on the effe
     + Recorded annually for each school.
     + Intermediate indicator.  The more often you go to school the better you do.
 + Environmental Improvements can reduce teacher absenteeism.
-    + Counts not recorded but expenditures on substitutes are a budget item that can be observed.
+    + Must be aquired district by district and year by year.
 + Some produce better learning environments, less distraction.  We can use the annual standardized testing results.
     + Everyone in the same grade takes the same test, but the test, and the levels can be different from year-to-year.
 
@@ -838,6 +838,3 @@ Ideally, there should be no _obserable_ difference. As close as you can get to r
     + Material that was in the report is only available for audited buildings in schools.
     + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
     + Elementary near my house has 4 buildings but looks like only 2 .
-
-
-
