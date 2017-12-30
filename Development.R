@@ -189,5 +189,10 @@ Membership15$PrevEnrollment <- as.numeric(Membership15$PrevEnrollment)
 Membership16$PrevEnrollment <- as.numeric(Membership16$PrevEnrollment)
 Membership17$PrevEnrollment <- as.numeric(Membership17$PrevEnrollment)
 
+# Join them
+Membership <- bind_rows(Membership10, Membership11, Membership12, Membership13, Membership14, Membership15, Membership16, Membership17) 
 
-Membership <- bind_rows(Membership10, Membership11, Membership12, Membership13, Membership14, Membership15, Membership16, Membership17) %>% View()
+# Clean space
+remove(Membership10, Membership11, Membership12, Membership13, Membership14, Membership15, Membership16, Membership17, CommonNames1217)
+
+
