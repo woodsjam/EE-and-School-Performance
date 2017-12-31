@@ -813,6 +813,35 @@ select(DistrictID:School.Type, Year, Test, value)%>%
   
 ```
 
+```{r LoadFinance, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+DistrictFinance <- read.csv("https://s3-us-west-2.amazonaws.com/woodsjeeschools/ActualExpendituresFundFunction30.CSV") 
+
+library(stringr)
+library(dplyr)
+
+# This still has ESD numbers in it and they have odd headcounts on students and expenditures.
+
+Membership %>%
+  select(DistrictID, Year, Enrollment) %>%
+  group_by(DistrictID, Year) %>%
+  summarise(DistrictEnrollment = sum(Enrollment, na.rm = TRUE)) ->DistrictEnrollment
+
+DistrictFinance %>%
+  mutate(YearBeginning = as.numeric(str_sub(as.character(SchlYr),-4) )) %>%
+  mutate(Year = YearBeginning + 1) %>%
+  filter(MajFuncDesc == "Instruction" & Amount > 0 & Year > 2009) %>%
+  select(DistInstID, Year, Amount) %>%
+  group_by(DistInstID, Year) %>%
+  summarise(InstExpenditures = sum(Amount, na.rm = TRUE)) %>%
+  left_join(DistrictEnrollment, by = c("DistInstID" = "DistrictID", "Year"), suffix = c("", ".KILL")) %>%
+  select( -contains(".KILL")) %>%
+  filter(DistrictEnrollment > 0) %>%
+  mutate(PerStudentExp = InstExpenditures/DistrictEnrollment) -> DistrictFinance
+
+  
+```
+
+
 
 ```{r MergeAll, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -821,6 +850,7 @@ FreeReduced %>%
   left_join(TestScores, by = c("DistrictID", "SchoolID", "Year"), suffix = c("",".KILL")) %>%     
   left_join(Attendance, by = c("DistrictID", "SchoolID", "Year"), suffix = c("",".KILL")) %>%
   left_join(Membership, by = c("DistrictID", "SchoolID", "Year"), suffix = c("",".KILL")) %>%
+  left_join(DistrictFinance, by = c("DistrictID" = "DistInstID", "Year")) %>%
   select(-contains(".KILL")) ->Master
 
 
