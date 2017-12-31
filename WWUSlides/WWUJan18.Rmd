@@ -814,7 +814,17 @@ select(DistrictID:School.Type, Year, Test, value)%>%
 ```
 
 
+```{r MergeAll, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
+FreeReduced %>% 
+  filter(Year > 2009) %>%
+  left_join(TestScores, by = c("DistrictID", "SchoolID", "Year"), suffix = c("",".KILL")) %>%     
+  left_join(Attendance, by = c("DistrictID", "SchoolID", "Year"), suffix = c("",".KILL")) %>%
+  left_join(Membership, by = c("DistrictID", "SchoolID", "Year"), suffix = c("",".KILL")) %>%
+  select(-contains(".KILL")) ->Master
+
+
+```
 # Matching Options
 
 Control group composed of ineligible schools
