@@ -1,0 +1,66 @@
+---
+title: "Actual Statistics"
+output: html_notebook
+---
+
+
+library(stargazer)
+
+BasicResults <- function(DataFrame){ 
+  list(
+summary(lm(ELA.Pct.Met~ Year+Treated, DataFrame[DataFrame$GradeThree>0,])),
+summary(lm(Math.Pct.Met~ Year+ Treated, DataFrame[DataFrame$GradeThree>0,])),
+summary(lm(Reading.Pct.Met~ Treated, DataFrame[DataFrame$GradeThree>0,])),
+summary(lm(Science.Pct.Met~ Treated, DataFrame[DataFrame$GradeThree>0,])),
+summary(lm(Writing.Pct.Met~ Treated, DataFrame[DataFrame$GradeThree>0,])),
+
+summary(lm(ELA.Pct.Met~ Treated, DataFrame[DataFrame$GradeEight>0,])),
+summary(lm(Math.Pct.Met~ Treated, DataFrame[DataFrame$GradeEight>0,])),
+summary(lm(Reading.Pct.Met~ Treated, DataFrame[DataFrame$GradeEight>0,])),
+summary(lm(Science.Pct.Met~ Treated, DataFrame[DataFrame$GradeEight>0,])),
+summary(lm(Writing.Pct.Met~ Treated, DataFrame[DataFrame$GradeEight>0,])),
+
+summary(lm(ELA.Pct.Met~ Treated, DataFrame[DataFrame$GradeEleven>0,])),
+summary(lm(Math.Pct.Met~ Treated, DataFrame[DataFrame$GradeEleven>0,])),
+summary(lm(Reading.Pct.Met~ Treated, DataFrame[DataFrame$GradeEleven>0,])),
+summary(lm(Science.Pct.Met~ Treated, DataFrame[DataFrame$GradeEleven>0,])),
+summary(lm(Writing.Pct.Met~ Treated, DataFrame[DataFrame$GradeEleven>0,])))
+}
+
+## Comments:  There is mostly a there there.
+## 
+
+BasicResults(Master)
+
+plot(Master$ELA.Pct.Met~ as.factor(Master$Year))
+plot(Master$Math.Pct.Met~ as.factor(Master$Year))
+plot(Master$Reading.Pct.Met~ as.factor(Master$Year))
+plot(Master$Science.Pct.Met~ as.factor(Master$Year))
+plot(Master$Writing.Pct.Met~ as.factor(Master$Year))
+
+# Only those in border districts
+
+Master %>%
+  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID")) ->BorderOnly
+
+
+BasicResults(BorderOnly)
+
+
+## Build by year graphic of test scores
+
+library(ggplot2)
+
+Master %>%
+  ungroup %>%
+  select(Year ,
+         ELA = ELA.Pct.Met,
+         Math = Math.Pct.Met,
+         Reading = Reading.Pct.Met,
+         Science = Science.Pct.Met,
+         Writing = Writing.Pct.Met,
+         SchoolID,
+         GradeThree,
+         GradeEight,
+         GradeEleven) %>% 
+  ggplot(aes(Math, y = as.factor(Year))) + geom_boxplot()
