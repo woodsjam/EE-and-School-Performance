@@ -972,7 +972,17 @@ Master %>%
   mutate(Treated = cumany(NewlyTreated),
          AnyPlacebo = cumany(Placebo),
          AnyEffective = cumany(Effective)) -> Master
+
+# Add Eligibility
+
+Eligibility <- AllSchools %>%
+  select(School.ID, District.ID, Eligible = SB.1149.Eligibility)
+
+Master %>%
+  left_join(Eligibility, by = c("SchoolID" = "School.ID", "DistrictID"= "District.ID"), suffix = c("",".KILL")) %>%
+  select( -contains(".KILL")) -> Master
   
+
 ```
 # Matching Options
 
