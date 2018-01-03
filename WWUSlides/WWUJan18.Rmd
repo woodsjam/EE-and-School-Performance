@@ -974,6 +974,11 @@ Master %>%
          AAPct = AfricanAmerican / Enrollment,
          HispanicPct = Hispanic / Enrollment,
          AsianPct = Asian / Enrollment) -> Master
+
+# Add Border District identifier
+# 
+Master %>%
+  
   
 ```
     
@@ -1029,20 +1034,81 @@ Ideally, there should be no _obserable_ difference. As close as you can get to r
     + Facility characteristics
 + Problems:
     + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
-    + Material that was in the report is _only available for audited buildings in schools_.
+    + Current  facilities characteristics are _only available for audited buildings in schools_.
         + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
         + Elementary near my house has 4 buildings but looks like only 2 .
 
-# How to Model the Treatment Process
+In short, we can't use building characteristics but we can use student characteristics to model treatment process.
 
-Ideal:
+# Approaches
 
-+ Very likely that the choice to install EEMs is based on energy use, not student characteristics.
-+ Student characteristics may be correlated with energy use, or age of building, but that can't be tested with available data.
++ Only looking at schools in districts that have both eligible and ineligible schools
+    + Helps control for teacher salaries
+    + Other district policies
++ Ineligible schools as control
+    + Simple regression with student population controls.
+    + Refine with a matching method later.
++ Eligible but untreated schools as controls
+    + Must start with matching.
 
-Practical:
+# Is there a there there?
 
-+ Model Treatment
+Two Views:
+
++ Fraction of students passing each of the tests
++ Student Attendance
+
+Note:
+
++ No contols for student population
++ Only ineligible schools and schools eventually treated.
++ Separate Results for elementary, middle and high schools.
++ Year controls
+
+
+```{r ThereThere, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+BasicResults <- function(DataFrame, RHS){ 
+  list(
+lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+
+lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+
+lm( as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste("Reading.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste("Science.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
+}
+
+OnlyBorder <- Master %>%
+  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID"))
+
+OnlyBorder %>% 
+  filter(Eligible == TRUE | EverTreated ==TRUE) ->FirstTest
+
+partform <- "Eligible+Treated + as.factor(Year)"
+SimpleResults <- BasicResults(Master, partform)
+
+```
+
+# Elementary
+
+```{r, results= "asis"}
+library(stargazer)
+
+stargazer(SimpleResults[[1]], SimpleResults[[2]],SimpleResults[[3]], SimpleResults[[4]], keep = c("Constant", "Eligible", "Treated"))
+
+```
+
 
 # Methods
 
@@ -1055,13 +1121,4 @@ Practical:
     + Card, D. and A. Krueger (1994)
     + Mix of differences in differences and matching
     + Weights basket of controls to achieve better results
-
-
-# Matching Options
-
-Control group composed of ineligible schools
-
-+ Only within district or not
-+ Variables to use with matching
-+ Additional variables for matches outside of district
 
