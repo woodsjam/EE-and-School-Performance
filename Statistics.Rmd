@@ -93,4 +93,11 @@ SimpleResults <-BasicResults(Master, partform)
 lapply(SimpleResults, summary)
 ```
 
+# CEM
+
+```{r}
+library(cem)
+
+```
+
 

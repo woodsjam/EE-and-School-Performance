@@ -1095,8 +1095,8 @@ OnlyBorder <- Master %>%
 OnlyBorder %>% 
   filter(Eligible == TRUE | EverTreated ==TRUE) ->FirstTest
 
-partform <- "Eligible+Treated + as.factor(Year)"
-SimpleResults <- BasicResults(Master, partform)
+partform <- "EverTreated+Treated + as.factor(Year)"
+SimpleResults <- BasicResults(FirstTest, partform)
 
 ```
 
