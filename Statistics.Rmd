@@ -1,6 +1,8 @@
 ---
 title: "Actual Statistics"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -62,8 +64,33 @@ Use this to demo that you need to control for year because the tests change from
 # Simple Results for Border Districts
 
 ```{r}
+BasicResults <- function(DataFrame, RHS){ 
+  list(
+lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
 
+lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
 
-
+lm( as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste("Reading.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste("Science.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
+}
 ```
+
+```{r}
+partform <- "Eligible+Treated + as.factor(Year)"
+SimpleResults <-BasicResults(Master, partform)
+
+lapply(SimpleResults, summary)
+```
+
 

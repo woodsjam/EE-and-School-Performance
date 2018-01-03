@@ -453,29 +453,7 @@ AllSchools %>%
     + Eligible untreated: `r  table(TreatedDistrictSchools$SB.1149.Eligibility)[2] - table(TreatedDistrictSchools$Treated)[2]`
     + Eligible treated: `r table(TreatedDistrictSchools$Treated)[2]`
     + Ineligible: `r table(TreatedDistrictSchools$SB.1149.Eligibility)[1]`    
-    
 
-
-# Getting at Causality, the Identification Problem
-
-# Methods
-
-+ Corsened exact matching 
-    + Iacus, King, and Porro (2012)
-    + Define what you mean by close enough in multiple dimensions
-    + Find the close enough match on observable dimensions
-    + Excluded treated with no match
-+ Synthetic control method 
-    + Card, D. and A. Krueger (1994)
-    + Mix of differences in differences and matching
-    + Weights basket of controls to achieve better results
-
-# Working With Data from ODE
-
-+ Exercise in frustration
-    + Separate files per year
-    + Little consistency in names, actual data reported, format
-    + Non-existent documentation or institutional knowledge
  
 ```{r LoadFreeReducedData, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -982,8 +960,103 @@ Master %>%
   left_join(Eligibility, by = c("SchoolID" = "School.ID", "DistrictID"= "District.ID"), suffix = c("",".KILL")) %>%
   select( -contains(".KILL")) -> Master
   
+# Add Ever Treated
+
+Master %>% 
+  group_by(SchoolID) %>%
+  mutate(EverTreated = any(NewlyTreated)) -> Master
+
+# Add Fractional student population descriptions
+
+Master %>%
+  mutate(MalePct = Male / Enrollment,
+         WhitePct = White / Enrollment ,
+         AAPct = AfricanAmerican / Enrollment,
+         HispanicPct = Hispanic / Enrollment,
+         AsianPct = Asian / Enrollment) -> Master
+  
+```
+    
+
+# Test Scores
+
+There are four tests given over the sample period, school years ending 2010 - 2016.
+
++ English Language Arts 2015-2016
+    + Writting 2010 - 2014
+    + Reading 2010-2014
++ Math
++ Science
+
+# What is Reported
+
+What is reported is the fraction of students at each school that 'meet standards'.  
+
++ That standard changes from year-to-year
++ Year is an important control variable
+
+# Percent Passing Math By School (State)
+```{r MathPassing, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+
+Master %>%
+  ungroup() %>%
+  select(Year,
+         ELA = ELA.Pct.Met,
+         Math = Math.Pct.Met,
+         Reading = Reading.Pct.Met,
+         Science = Science.Pct.Met,
+         Writing = Writing.Pct.Met,
+         SchoolID,
+         GradeThree,
+         GradeEight,
+         GradeEleven
+         ) %>% 
+  mutate(Year = as.factor(Year)) %>%
+  ggplot(aes(y = Math, x = Year)) + geom_boxplot()
 
 ```
+
+# Getting at Causality, the Identification Problem
+
+# How Different are Treated, Untreated and Ineligible schools?
+
+Ideally, there should be no _obserable_ difference. As close as you can get to random assignment.
+
++ Dimensions:
+    + Current Student Population, free and reduced rate, ethnicity, etc.
+    + Prior Test scores
+    + Facility characteristics
++ Problems:
+    + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
+    + Material that was in the report is _only available for audited buildings in schools_.
+        + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
+        + Elementary near my house has 4 buildings but looks like only 2 .
+
+# How to Model the Treatment Process
+
+Ideal:
+
++ Very likely that the choice to install EEMs is based on energy use, not student characteristics.
++ Student characteristics may be correlated with energy use, or age of building, but that can't be tested with available data.
+
+Practical:
+
++ Model Treatment
+
+# Methods
+
++ Corsened exact matching 
+    + Iacus, King, and Porro (2012)
+    + Define what you mean by close enough in multiple dimensions
+    + Find the close enough match on observable dimensions
+    + Excluded treated with no match
++ Synthetic control method 
+    + Card, D. and A. Krueger (1994)
+    + Mix of differences in differences and matching
+    + Weights basket of controls to achieve better results
+
+
 # Matching Options
 
 Control group composed of ineligible schools
@@ -992,17 +1065,3 @@ Control group composed of ineligible schools
 + Variables to use with matching
 + Additional variables for matches outside of district
 
-
-# How Different are Treated, Untreated and Ineligible schools?
-
-Ideally, there should be no _obserable_ difference. As close as you can get to random assignment.
-
-+ Dimensions:
-    + Student population, free and reduced rate, ethnicity, etc.
-    + Test scores
-    + Facility characteristics
-+ Problems:
-    + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
-    + Material that was in the report is only available for audited buildings in schools.
-    + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
-    + Elementary near my house has 4 buildings but looks like only 2 .
