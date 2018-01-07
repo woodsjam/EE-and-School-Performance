@@ -745,90 +745,178 @@ Membership <- bind_rows(Membership10, Membership11, Membership12, Membership13, 
 # Clean space
 remove(Membership10, Membership11, Membership12, Membership13, Membership14, Membership15, Membership16, Membership17, CommonNames1217)
 
+
 ```
 
 ```{r LoadTestScores, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
+# Source http://www.ode.state.or.us/data/reportcard/Media.aspx
+
+
+# Read in
+
 Schools16 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/17/RCmediaSchoolsAggregate.csv")
 
+Schools15 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/16/RCmediaSchoolsAggregate.csv")
+
 Schools14 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/15/RCmediaSchoolsAggregate.csv")
-# make the school identifiers uniform witth 16 name
-# 
 
 Schools13 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/14/RCmediaSchoolsAggregate.csv")
 
-library(dplyr)
+Schools12 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/13/RCmediaSchoolsAggregate.csv")
+
+Schools11 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/12/RCmediaSchoolsAggregate.csv")
+
+Schools10 <- read.csv("http://www.ode.state.or.us/data/reportcard/media/11/RCmediaSchoolsAggregate.csv")
 
 
-###
-Schools13 %>% 
-  select( DistrictID = District.ID, SchoolID = School.ID,
-    Reading.Pct.Met_10 = Reading.Pct.Met.2009.10,
-    Math.Pct.Met_10 = Math.Pct.Met.2009.10,  
-    Writing.Pct.Met_10 = Writing.Pct.Met.2009.10,  
-    Science.Pct.Met_10 = Science.Pct.Met.2009.10,
-  ) -> Schools13
-
-Schools14 %>%
-  select(DistrictID = District.ID, SchoolID = School.ID,
-                        
-         Reading.Pct.Met_11 = Reading.Pct.Met.2010.11,               
-         Reading.Pct.Met_12 = Reading.Pct.Met.2011.12,               
-         Reading.Pct.Met_13 = Reading.Pct.Met.2012.13,
-         Reading.Pct.Met_14 = Reading.Pct.Met.2013.14,
-         
-         Math.Pct.Met_11 = Math.Pct.Met.2010.11,                  
-         Math.Pct.Met_12 = Math.Pct.Met.2011.12,                  
-         Math.Pct.Met_13 = Math.Pct.Met.2012.13,
-         Math.Pct.Met_14 = Math.Pct.Met.2013.14,
-
-         Writing.Pct.Met_11 = Writing.Pct.Met.2010.11,               
-         Writing.Pct.Met_12= Writing.Pct.Met.2011.12,               
-         Writing.Pct.Met_13 = Writing.Pct.Met.2012.13,        
-         Writing.Pct.Met_14 = Writing.Pct.Met.2013.14,
-         
-                        
-         Science.Pct.Met_11 = Science.Pct.Met.2010.11,               
-         Science.Pct.Met_12 = Science.Pct.Met.2011.12,               
-         Science.Pct.Met_13 = Science.Pct.Met.2012.13,
-         Science.Pct.Met_14 = Science.Pct.Met.2013.14
-) -> Schools14
-
+# Normalize Columns
 
 Schools16 %>%
-  select(DistrictID = District.ID, District = District.Name, SchoolID = School.ID, School = School.Name, Grades.Offered, School.Type,
-         ELA.Pct.Met_15 = ELA.Pct.Met.2014.15,                      
-         ELA.Pct.Met_16 = ELA.Pct.Met.2015.16, 
-         Math.Pct.Met_15 = Math.Pct.Met.2014.15,                     
-         Math.Pct.Met_16 = Math.Pct.Met.2015.16,  
-         Science.Pct.Met_15= Science.Pct.Met.2014.15,                  
-         Science.Pct.Met_16 = Science.Pct.Met.2015.16         
-) -> Schools16        
+  mutate(Year = 2016) %>%
+  select(DistrictID = District.ID, 
+         SchoolID = School.ID, 
+         Year,
+         Type = School.Type,
+         ELA = ELA.Pct.Met.2015.16,
+         Math = Math.Pct.Met.2015.16,
+         Science = Science.Pct.Met.2015.16) -> Schools16
 
-full_join(Schools14, Schools16, by = c("DistrictID", "SchoolID"), suffix = c("", ".KILL")) %>%
-  full_join(Schools13, by = c("DistrictID", "SchoolID"), suffix = c("", ".KILL")) %>%
+Schools15 %>%
+  mutate(Year = 2015) %>%
+  select(DistrictID = District.ID, 
+         SchoolID = School.ID, 
+         Year,
+         Type = School.Type,
+         ELA = ELA.Pct.Met.2014.15,
+         Math = Math.Pct.Met.2014.15,
+         Science = Science.Pct.Met.2014.15) -> Schools15
+
+Schools14 %>%
+  mutate(Year = 2014) %>%
+  select(DistrictID = District.ID, 
+         SchoolID = School.ID, 
+         Year,
+         Type = School.Type,
+         Reading = Reading.Pct.Met.2013.14,
+         Writing = Writing.Pct.Met.2013.14,
+         Math = Math.Pct.Met.2013.14,
+         Science = Science.Pct.Met.2013.14) -> Schools14
+
+Schools13 %>%
+  mutate(Year = 2013) %>%
+  select(DistrictID = District.ID, 
+         SchoolID = School.ID, 
+         Year,
+         Type = School.Type,
+         Reading = Reading.Pct.Met.2012.13,
+         Writing = Writing.Pct.Met.2012.13,
+         Math = Math.Pct.Met.2012.13,
+         Science = Science.Pct.Met.2012.13) -> Schools13
+
+
+Schools12 %>%
+  mutate(Year = 2012,DistrictID = NA ) %>%
+  select(DistrictID, 
+         SchoolID = InstID, 
+         Year,
+         Type = SchoolType,
+         Reading = ReadStudExceedMeetAllGradePct1,
+         Writing = WriteStudExceedMeetAllGradePct1,
+         Math = MathStudExceedMeetAllGradePct1,
+         Science = ScienceStudExceedMeetAllGradePct1) -> Schools12
+
+
+Schools11 %>%
+  mutate(Year = 2011, DistrictID = NA ) %>%
+  select(DistrictID, 
+         SchoolID = InstID, 
+         Year,
+         Type = SchoolType,
+         Reading = ReadStudExceedMeetAllGradePct1,
+         Writing = WriteStudExceedMeetAllGradePct1,
+         Math = MathStudExceedMeetAllGradePct1,
+         Science = ScienceStudExceedMeetAllGradePct1) -> Schools11
+
+
+Schools10 %>%
+  mutate(Year = 2010, DistrictID = NA ) %>%
+  select(DistrictID, 
+         SchoolID = InstID, 
+         Year,
+         Type = SchoolType,
+         Reading = ReadStudExceedMeetAllGradePct1,
+         Writing = WriteStudExceedMeetAllGradePct1,
+         Math = MathStudExceedMeetAllGradePct1,
+         Science = ScienceStudExceedMeetAllGradePct1) -> Schools10
+
+
+TestScores <- bind_rows(Schools10, Schools11, Schools12, Schools13, Schools14, Schools15, Schools16) 
+rm(Schools10, Schools11, Schools12, Schools13, Schools14, Schools15, Schools16)
+
+# Fix top, bottom and NA coding
+
+TestScores %>%
+  mutate(Reading = as.numeric(case_when(
+    Reading == ">95"  ~  "95",
+    Reading == "<5" ~ "5",
+    Reading == "*" ~ "NA",
+    Reading == "--" ~ "NA",
+    TRUE ~ Reading))) %>%
+  mutate(Writing = as.numeric(case_when(
+    Writing == ">95"  ~  "95",
+    Writing == "<5" ~ "5",
+    Writing == "*" ~ "NA",
+    Writing == "--" ~ "NA",
+    TRUE ~ Writing))) %>%
+  mutate(Math = as.numeric(case_when(
+    Math == ">95"  ~  "95",
+    Math == "<5" ~ "5",
+    Math == "*" ~ "NA",
+    Math == "--" ~ "NA",
+    TRUE ~ Math))) %>%
+  mutate(Science = as.numeric(case_when(
+    Science == ">95"  ~  "95",
+    Science == "<5" ~ "5",
+    Science == "*" ~ "NA",
+    Science == "--" ~ "NA",
+    TRUE ~ Science))) %>%
+  mutate(ELA = as.numeric(case_when(
+    ELA == ">95"  ~  "95",
+    ELA == "<5" ~ "5",
+    ELA == "*" ~ "NA",
+    ELA == "--" ~ "NA",
+    TRUE ~ ELA))) ->TestScores
+
+# Change to numeric  
+TestScores %>%
+  mutate(Reading = as.numeric(Reading),
+         Writing = as.numeric(Writing),
+         Math = as.numeric(Math),
+         Science = as.numeric(Science),
+         ELA = as.numeric(ELA)) ->TestScores
+
+# Fix High school type
+# 
+
+TestScores %>%
+  mutate(Type = case_when(
+    Type == "HSG" ~ "H",
+    Type == "HSA" ~ "H",
+    TRUE ~ Type)) ->TestScores
+
+#Fill missing district codes
+
+TestScores %>%
+  filter(!is.na(DistrictID)) %>%
+  select(DistrictID, SchoolID) %>%
+  unique() -> DistrictSchoolPairs
+
+TestScores %>%
+  left_join(DistrictSchoolPairs, by = "SchoolID", suffix = c(".KILL","")) %>%
   select(-contains(".KILL")) -> TestScores
 
-remove(Schools14, Schools16, Schools13)
-
-library(dplyr)
-library(tidyr)
-
-#Percent pass are top coded at 95% and bottom coded at 5%
-
-TestScores %>% 
-  gather(Test, value, contains("met")) %>%
-  separate(Test, into = c("Test", "Year"),sep = "_") %>%
-  mutate(value = as.numeric(case_when(
-    value == ">95"  ~ "95",
-    value == "<5" ~ "5",
-    value == "*" ~ "NA",
-    TRUE ~ value
-    ))) %>%
-select(DistrictID:School.Type, Year, Test, value)%>% 
-  spread(Test, value) %>%
-  mutate(Year =  as.numeric(Year) + 2000) -> TestScores
-  
+rm(DistrictSchoolPairs)  
 ```
 
 ```{r LoadFinance, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
@@ -842,7 +930,7 @@ library(dplyr)
 Membership %>%
   select(DistrictID, Year, Enrollment) %>%
   group_by(DistrictID, Year) %>%
-  summarise(DistrictEnrollment = sum(Enrollment, na.rm = TRUE)) ->DistrictEnrollment
+  summarise(DistrictEnrollment = sum(Enrollment, na.rm = TRUE)) -> DistrictEnrollment
 
 DistrictFinance %>%
   mutate(YearBeginning = as.numeric(str_sub(as.character(SchlYr),-4) )) %>%
@@ -959,6 +1047,7 @@ FreeReduced %>%
   left_join(EEMSummary, by = c("SchoolID" = "FacilityODEId", "Year"),suffix = c("",".KILL")) %>%
   select(-contains(".KILL")) -> Master
 
+library(tidyr)
 # Fix NA to false for those without EEMs
 Master %>% 
   replace_na(list(Controls = FALSE,
@@ -993,6 +1082,8 @@ Master %>%
 
 # Add Eligibility
 
+AllSchools <- read.csv("https://docs.google.com/spreadsheets/d/1WXNu3cNY4DyZ7yWXT2MPd3bd61M0Vmo2ty62Uux1TZU/pub?gid=1048793783&single=true&output=csv")
+
 Eligibility <- AllSchools %>%
   select(School.ID, District.ID, Eligible = SB.1149.Eligibility)
 
@@ -1018,17 +1109,18 @@ Master %>%
          HispanicPct = Hispanic / Enrollment,
          AsianPct = Asian / Enrollment)%>%
   mutate(Attendance = as.numeric(Attendance)) %>%
-  mutate(ELALogit  = LogitTransform(ELA.Pct.Met),
-         MathLogit = LogitTransform(Math.Pct.Met),
-         ReadingLogit  = LogitTransform(Reading.Pct.Met),
-         ScienceLogit = LogitTransform(Science.Pct.Met),
-         WritingLogit = LogitTransform(Writing.Pct.Met),
+  mutate(ELALogit  = LogitTransform(ELA),
+         MathLogit = LogitTransform(Math),
+         ReadingLogit  = LogitTransform(Reading),
+         ScienceLogit = LogitTransform(Science),
+         WritingLogit = LogitTransform(Writing),
          FreeLunchPct = FreeLunchPercent/100,
          AttendancePct = Attendance/100,
-         AttendanceLogit = LogitTransform(Attendance))-> Master
+         AttendanceLogit = LogitTransform(Attendance)) -> Master
 
 # Add Border District identifier
 # 
+
 
   
 ```
@@ -1039,8 +1131,8 @@ Master %>%
 There are four tests given over the sample period, school years ending 2010 - 2016.
 
 + English Language Arts 2015-2016
-    + Writting 2010 - 2014
-    + Reading 2010-2014
+    + Writting 2010 - 2014 (High School Only)
+    + Reading 2010 - 2014
 + Math
 + Science
 

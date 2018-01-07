@@ -4,100 +4,93 @@ output:
   html_document:
     df_print: paged
 ---
-
-```{r}
-library(dplyr)
-library(stargazer)
-
-BasicResults <- function(DataFrame){ 
-  list(
-lm(ELA.Pct.Met~ Treated + as.factor(Year), DataFrame[DataFrame$GradeThree>0,]),
-lm(Math.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeThree>0,]),
-lm(Reading.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeThree>0,]),
-lm(Science.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeThree>0,]),
-lm(Writing.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeThree>0,]),
-
-lm(ELA.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEight>0,]),
-lm(Math.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEight>0,]),
-lm(Reading.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEight>0,]),
-lm(Science.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEight>0,]),
-lm(Writing.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEight>0,]),
-
-lm(ELA.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEleven>0,]),
-lm(Math.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEleven>0,]),
-lm(Reading.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEleven>0,]),
-lm(Science.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEleven>0,]),
-lm(Writing.Pct.Met~ Treated+ as.factor(Year), DataFrame[DataFrame$GradeEleven>0,]))
-}
-
-## Comments:  There is mostly a there there.
-## 
-
-# BasicResults(Master)
-
-```
-
-## Build by year graphic of test scores
-```{r}
-library(ggplot2)
-
-Master %>%
-  ungroup() %>%
-  select(Year,
-         ELA = ELA.Pct.Met,
-         Math = Math.Pct.Met,
-         Reading = Reading.Pct.Met,
-         Science = Science.Pct.Met,
-         Writing = Writing.Pct.Met,
-         SchoolID,
-         GradeThree,
-         GradeEight,
-         GradeEleven
-         ) %>% 
-  mutate(Year = as.factor(Year)) %>%
-  ggplot(aes(y = Math, x = Year)) + geom_boxplot()
-
-```
-
-Use this to demo that you need to control for year because the tests change from year to year.
-
 # Simple Results for Border Districts
 
 ```{r}
-BasicResults <- function(DataFrame, RHS){ 
+
+BasicResults <- function(DataFrame, RHS, PartialLHS){ 
   list(
-lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
 
-lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
 
-lm( as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste("Reading.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste("Science.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
+lm( as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste(PartialLHS[4] ,"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
+lm(as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
 }
 ```
 
+
+Should give rough idea
 ```{r}
-partform <- "Eligible+Treated + as.factor(Year)"
-SimpleResults <-BasicResults(Master, partform)
+library(dplyr)
+
+BorderOnlySchools <- Master %>% 
+  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID"))  
+  
+
+LHS <- c("ELALogit", "MathLogit","ReadingLogit", "ScienceLogit", "WritingLogit")
+
+partform <- "Eligible + NewlyTreated + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct + as.factor(DistrictID)"
+
+SimpleResults <- BasicResults(BorderOnlySchools, partform, LHS )
 
 lapply(SimpleResults, summary)
 ```
 
-# CEM
-
+Now only ineligible vs Evertreated, regression discontinuity test
 ```{r}
-library(cem)
+library(dplyr)
+
+RegressionDiscontinuity <- Master %>% 
+  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID")) %>%
+  filter(Eligible == "NO"  | EverTreated == TRUE)
+  
+
+LHS <- c("ELALogit", "MathLogit","ReadingLogit", "ScienceLogit", "WritingLogit")
+
+partform <- "Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct"
+
+RegDiscResults <- BasicResults(RegressionDiscontinuity, partform, LHS )
+
+lapply(RegDiscResults, summary)
 
 ```
 
+```{r}
+library(dplyr)
+
+RegressionDiscontinuity <- Master %>% 
+  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID")) %>%
+  filter(Eligible == "NO"  | EverTreated == TRUE)
+
+RegressionDiscontinuity %>%
+  select(Attendance, AttendanceLogit) %>% View()
+
+LHS <- rep("AttendanceLogit",5)
+
+partform <- "Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct"
+
+AttendanceModel <- function(DataFrame, RHS, PartialLHS){ 
+  list(
+lm(as.formula(paste(PartialLHS,"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
+lm(as.formula(paste(PartialLHS,"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
+lm(as.formula(paste(PartialLHS,"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
+  }
+
+AttendanceResults <- AttendanceModel(RegressionDiscontinuity, partform, "AttendanceLogit")
+
+lapply(AttendanceResults, summary)
+
+```
 
