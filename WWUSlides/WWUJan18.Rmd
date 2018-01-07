@@ -469,6 +469,13 @@ FreeReduced$Year <- as.numeric(substr(FreeReduced$SCHLYR, nchar(FreeReduced$SCHL
 FreeReduced %>%
   select( SchoolID  = SCHLINSTID, DistrictID  = DISTINSTID,  FreeLunchPercent = FREEREDLNCHPCT, District = DISTNM, School= SCHLNM, Year  ) -> FreeReduced
 
+## Diagnostics
+
+# FreeReduced %>%
+#   group_by(SchoolID) %>%
+#   summarise(n = n(), StartYear = min(Year), EndYear = max(Year)) %>%
+#   View()
+
 ```
  
  
@@ -492,19 +499,52 @@ Attendance15$Year <- 2015
 Attendance16$Year <- 2016
 Attendance17$Year <- 2017
 
+Attendance13 <- Attendance13 %>%
+  filter(Subgroup == "All Students", `School/District` == "School") 
+
+Attendance14 <- Attendance14 %>%
+  filter(Subgroup == "All Students", `School/District` == "School") 
+
+Attendance15 <- Attendance15 %>%
+  filter( `Institution\r\nType` !="District", `Student Group` == "All Students")
+
+Attendance16 <- Attendance16  %>%
+  filter( `Institution\r\nType` !="District", `Student Group` == "All Students")
+
+Attendance17 <- Attendance17  %>%
+  filter( `Institution\r\nType` !="District", `Student Group` == "All Students")
+
 library(dplyr)
 bind_rows(Attendance13, Attendance14) %>%
-  filter(Subgroup == "All Students", `School/District` == "School") %>%
   select(DistrictID, Distict = `District Name`,  SchoolID = InstID, School = `Institution Name`, Attendance = `Current Attendance Rate`, Year) ->EarlyAttendance
 
 bind_rows(Attendance15, Attendance16, Attendance17)  %>%
   filter(`Student Group` == "All Students") %>%
-  select(Distict = `Parent District Name`,  SchoolID = InstID, School = `Institution Name`, Attendance = `Attendance\r\nRate`, Year) ->LateAttendance
+  select(Distict = `Parent District Name`,  SchoolID = InstID, School = `Institution Name`, Attendance = `Attendance\r\nRate`, Year) -> LateAttendance
 
 # Final Attendance
 bind_rows(EarlyAttendance, LateAttendance) %>% unique() -> Attendance
 
-remove(Attendance13, Attendance14, Attendance15, Attendance16, Attendance17, EarlyAttendance, LateAttendance)
+
+
+# fix missing district ID for later years
+# 
+
+Attendance %>%
+  filter(!is.na(DistrictID)) %>%
+  select(DistrictID, SchoolID) %>%
+  unique() -> DistrictKEY
+
+Attendance %>%
+  left_join(DistrictKEY, by = c("SchoolID"),suffix = c(".KILL","")) %>%
+  select(-contains(".KILL")) %>%
+  mutate(Attendance = as.numeric(Attendance))-> Attendance
+
+
+remove(Attendance13, Attendance14, Attendance15, Attendance16, Attendance17, EarlyAttendance, LateAttendance, DistrictKEY)
+
+# Diagnostics
+
 
 ```
 
@@ -966,19 +1006,30 @@ Master %>%
   group_by(SchoolID) %>%
   mutate(EverTreated = any(NewlyTreated)) -> Master
 
-# Add Fractional student population descriptions
+# Add Fractional student population descriptions and logit transform the  response.
+#
+LogitTransform <- function(x) (x/100)/(1-(x/100))
+
 
 Master %>%
   mutate(MalePct = Male / Enrollment,
          WhitePct = White / Enrollment ,
          AAPct = AfricanAmerican / Enrollment,
          HispanicPct = Hispanic / Enrollment,
-         AsianPct = Asian / Enrollment) -> Master
+         AsianPct = Asian / Enrollment)%>%
+  mutate(Attendance = as.numeric(Attendance)) %>%
+  mutate(ELALogit  = LogitTransform(ELA.Pct.Met),
+         MathLogit = LogitTransform(Math.Pct.Met),
+         ReadingLogit  = LogitTransform(Reading.Pct.Met),
+         ScienceLogit = LogitTransform(Science.Pct.Met),
+         WritingLogit = LogitTransform(Writing.Pct.Met),
+         FreeLunchPct = FreeLunchPercent/100,
+         AttendancePct = Attendance/100,
+         AttendanceLogit = LogitTransform(Attendance))-> Master
 
 # Add Border District identifier
 # 
-Master %>%
-  
+
   
 ```
     
@@ -1002,7 +1053,9 @@ What is reported is the fraction of students at each school that 'meet standards
 
 # Percent Passing Math By School (State)
 ```{r MathPassing, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
 library(ggplot2)
+
 
 Master %>%
   ungroup() %>%
@@ -1102,10 +1155,10 @@ SimpleResults <- BasicResults(FirstTest, partform)
 
 # Elementary
 
-```{r, results= "asis"}
+```{r echo=FALSE, message=FALSE, warning=FALSE, results = "asis"}
 library(stargazer)
 
-stargazer(SimpleResults[[1]], SimpleResults[[2]],SimpleResults[[3]], SimpleResults[[4]], keep = c("Constant", "Eligible", "Treated"))
+stargazer(SimpleResults[[1]], SimpleResults[[2]], SimpleResults[[3]],SimpleResults[[4]], keep = c("Constant", "Eligible", "Treated"), header = FALSE, type = "latex", dep.var.labels = c("ELA", "Math", "Reading", "Science", "Writing"), column.sep.width = "1pt")
 
 ```
 
