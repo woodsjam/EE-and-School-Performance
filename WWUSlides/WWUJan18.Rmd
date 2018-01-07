@@ -1121,8 +1121,10 @@ Master %>%
 # Add Border District identifier
 # 
 
+Master %>%
+  left_join(BorderDistricts, by = c("DistrictID" = "District.ID")) %>%
+  mutate(BorderDistrict  = if_else(is.na(nn), FALSE, TRUE)) -> Master
 
-  
 ```
     
 
