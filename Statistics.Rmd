@@ -8,25 +8,14 @@ output:
 
 ```{r}
 
-BasicResults <- function(DataFrame, RHS, PartialLHS){ 
+BasicResults <- function(DataFrame, RHS, PartialLHS, SchoolType){ 
   list(
-lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-
-lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-
-lm( as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste(PartialLHS[4] ,"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
+lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
+lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
+lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
+lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
+lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,])
+)
 }
 ```
 
@@ -35,15 +24,11 @@ Should give rough idea
 ```{r}
 library(dplyr)
 
-BorderOnlySchools <- Master %>% 
-  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID"))  
-  
-
 LHS <- c("ELALogit", "MathLogit","ReadingLogit", "ScienceLogit", "WritingLogit")
 
 partform <- "Eligible + NewlyTreated + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct + as.factor(DistrictID)"
 
-SimpleResults <- BasicResults(BorderOnlySchools, partform, LHS )
+SimpleResults <- BasicResults(Master, partform, LHS , "E")
 
 lapply(SimpleResults, summary)
 ```
