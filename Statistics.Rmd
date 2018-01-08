@@ -8,19 +8,19 @@ output:
 
 ```{r}
 
-BasicResults <- function(DataFrame, RHS, PartialLHS, SchoolType){ 
+BasicResults <- function(DataFrame, RHS, PartialLHS){ 
   list(
-lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
-lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
-lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
-lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,]),
-lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame[DataFrame$Type == SchoolType,])
+lm(as.formula(paste(PartialLHS[1],"~", RHS)), DataFrame),
+lm( as.formula(paste(PartialLHS[2],"~", RHS)), DataFrame),
+lm( as.formula(paste(PartialLHS[3],"~", RHS)), DataFrame),
+lm( as.formula(paste(PartialLHS[4],"~", RHS)), DataFrame),
+lm( as.formula(paste(PartialLHS[5],"~", RHS)), DataFrame)
 )
 }
 ```
 
 
-Should give rough idea
+Should give rough idea if it works
 ```{r}
 library(dplyr)
 
@@ -28,54 +28,96 @@ LHS <- c("ELALogit", "MathLogit","ReadingLogit", "ScienceLogit", "WritingLogit")
 
 partform <- "Eligible + NewlyTreated + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct + as.factor(DistrictID)"
 
-SimpleResults <- BasicResults(Master, partform, LHS , "E")
+SimpleResults <- BasicResults(Master, partform, LHS )
 
 lapply(SimpleResults, summary)
 ```
 
-Now only ineligible vs Evertreated, regression discontinuity test
-```{r}
-library(dplyr)
+Lets look at the contol and treated
 
-RegressionDiscontinuity <- Master %>% 
-  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID")) %>%
-  filter(Eligible == "NO"  | EverTreated == TRUE)
-  
+
+
+
+Now get to basic modeling with only the boarder districts.
+```{r}
+Master %>%
+  filter(BorderDistrict == TRUE) %>%
+  filter(Eligible == "NO"| EverTreated == TRUE) -> RegDiscData
+
+
+RegDiscData %>%
+  group_by(Eligible, Treated) %>%
+  summarise(mean(ELA, na.rm = TRUE), mean(Math, na.rm = TRUE), mean(Reading, na.rm = TRUE), mean(Science, na.rm = TRUE), mean( Writing, na.rm = TRUE))
+
+# Check for special schools
+
+RegDiscData %>%
+  select(School) %>% unique() %>% View()
+
+RegDiscData %>%
+  filter(contains(School)
+
+
+# LHS <- c("ELALogit", "MathLogit","ReadingLogit", "ScienceLogit", "WritingLogit")
+# 
+# partform <- "Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct "
+# 
+# SimpleResults <- BasicResults(RegDiscData[RegDiscData$GradeEleven > 0 ,], partform, LHS )
+# 
+# lapply(SimpleResults, summary)
+
+
+LHS <- c("AttendanceLogit")
+
+summary(lm(AttendanceLogit ~ Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = RegDiscData[RegDiscData$GradeThree > 0 ,] ))
+
+partform <- "Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct "
+
+SimpleResults <- BasicResults(RegDiscData[RegDiscData$GradeEight > 0 ,], partform, LHS )
+
+lapply(SimpleResults, summary)
+
+```
+
+
+Not seeing a there there
+
+```{r}
+
+Master %>%
+  filter(BorderDistrict == TRUE) %>%
+  filter(Eligible == "YES") -> OnlyEligible 
+
+summary(lm(AttendanceLogit ~ Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct + as.factor(DistrictID), data = OnlyEligible[OnlyEligible$GradeThree > 0 ,] ))
+
+
+summary(lm(AttendanceLogit ~ Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct  + as.factor(DistrictID), data = OnlyEligible[OnlyEligible$GradeEight > 0 ,] ))
+
+
+summary(lm(AttendanceLogit ~ Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct  + as.factor(DistrictID), data = OnlyEligible[OnlyEligible$GradeEleven > 0 ,] ))
+
+```
+
+Hmmm.  What if only some kinds of interventions work.  Lets go for the broad types
+
+```{r}
+
+library(dplyr)
 
 LHS <- c("ELALogit", "MathLogit","ReadingLogit", "ScienceLogit", "WritingLogit")
 
-partform <- "Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct"
+# Need to go back and give a indicator for each EEM type that in analogous to Treated and NewlyTreated.
+# 
+# 
+partform <- "Eligible + FixtureMod + Boiler + Lamp + Distribution + Chiller + Insulation + Windows + Other + Maintenance + Flow + Doors + HeatRecovery + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct "
 
-RegDiscResults <- BasicResults(RegressionDiscontinuity, partform, LHS )
+SimpleResults <- BasicResults(RegDiscData[RegDiscData$GradeThree > 0,], partform, LHS )
 
-lapply(RegDiscResults, summary)
+lapply(SimpleResults, summary)
 
-```
+summary(lm(AttendanceLogit ~ Eligible + FixtureMod + Boiler + Lamp + Distribution + Chiller + Insulation + Windows + Other + Maintenance + Flow + Doors + HeatRecovery + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = RegDiscData[RegDiscData$GradeThree > 0 ,] ))
 
-```{r}
-library(dplyr)
-
-RegressionDiscontinuity <- Master %>% 
-  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID")) %>%
-  filter(Eligible == "NO"  | EverTreated == TRUE)
-
-RegressionDiscontinuity %>%
-  select(Attendance, AttendanceLogit) %>% View()
-
-LHS <- rep("AttendanceLogit",5)
-
-partform <- "Eligible + Treated + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct"
-
-AttendanceModel <- function(DataFrame, RHS, PartialLHS){ 
-  list(
-lm(as.formula(paste(PartialLHS,"~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm(as.formula(paste(PartialLHS,"~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm(as.formula(paste(PartialLHS,"~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
-  }
-
-AttendanceResults <- AttendanceModel(RegressionDiscontinuity, partform, "AttendanceLogit")
-
-lapply(AttendanceResults, summary)
 
 ```
+
 
