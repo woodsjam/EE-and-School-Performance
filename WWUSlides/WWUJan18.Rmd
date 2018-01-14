@@ -234,7 +234,7 @@ The non-impactful EEMs can provide a placebo effect robustness check on the effe
 
 # Key Points
 
-+ Test scores are the main indicator but for some EEMs, absenteeism and attendance may be good predictors.
++ Test scores are the main indicator but for some EEMs, absenteeism and attendance _may_ be good predictors.
 + We have some candidates for instruments if we wish to take that route.
 
 
@@ -297,6 +297,9 @@ EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
 + Controls are frequently occupancy sensors and day-lighting controls
 + Fixtures are described in detail later as gym, exterior, etc.
 + Note that there are large enough numbers of educationally effective and placebo EEMs.
++ Each EEM was categorized as either Educationally Effective or Placebo.
+    + Exterior, gym, and other non-instructional areas are all placebo.
+    + Classroom lighting and controls, shell,  window and ventilation improvmenents are all effective.
 
 # Electric Utilities
 
@@ -1162,7 +1165,9 @@ Master %>%
      NewlyMaintenance = Maintenance,
      NewlyFlow = Flow,
      NewlyDoors = Doors,
-     NewlyHeatRecovery = HeatRecovery
+     NewlyHeatRecovery = HeatRecovery,
+     NewlyEffective = Effective,
+     NewlyPlacebo = Placebo
   ) %>%
   arrange(SchoolID, Year ) %>%
   group_by(SchoolID, DistrictID) %>%
@@ -1178,6 +1183,8 @@ Master %>%
          Flow  = cumany(NewlyFlow),
          Doors = cumany(NewlyDoors),
          HeatRecovery= cumany(NewlyHeatRecovery)
+         Effective = cumany(Effective),
+         Placebo = cumany(Placebo)
          ) -> Master
 
 
@@ -1257,10 +1264,9 @@ We can't use building characteristics but we can use student characteristics to 
     + Other district policies
 + Ineligible schools as control
     + _Regession Disontinuity Design_ (RDD) with student population controls.
-    + Refine with a matching method, _Coarsened Exact Matching_ (CEM) and Synthetic Control Method (SCM).
+    + Refine with a matching method, _Coarsened Exact Matching_ (CEM).
 + Eligible but untreated schools as controls
     + CEM
-    + SCM
 
 # Methods
 
@@ -1274,10 +1280,10 @@ We can't use building characteristics but we can use student characteristics to 
     + Define what you mean by close enough in multiple dimensions
     + Find the close enough match on observable dimensions
     + Reduces sensitivity to specification bias.
-+ Synthetic control method (SCM)
-    + Card, D. and A. Krueger (1994)
-    + Mix of differences in differences and matching
-    + Weights basket of controls to achieve better results.
+<!-- + Synthetic control method (SCM) -->
+<!--     + Card, D. and A. Krueger (1994) -->
+<!--     + Mix of differences in differences and matching -->
+<!--     + Weights basket of controls to achieve better results. -->
 
 # Cover Many Different Assumptions about Endogenaity
 
@@ -1292,7 +1298,9 @@ We can't use building characteristics but we can use student characteristics to 
 
 # Parallel Movement
 
-$$ logit(Meet~Standard) = f(EverTreated,  EverTreated * Year; Gender, Race/Ethnicity, FreeLunch, Year)$$
+$$ logit(Meet~Standard) =\\
+f(EverTreated,  EverTreated * Year;\\
+Gender, Race/Ethnicity, FreeLunch, Year)$$
 
 + Border districts with both treated and untreated eligible schools.
 + Only pre-treatement observations of treated schools.
