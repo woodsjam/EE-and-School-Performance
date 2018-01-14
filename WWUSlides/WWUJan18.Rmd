@@ -91,7 +91,7 @@ schools by 5 to 14 percent."
 + M. J. Mendell and G. A. Heath. “Do indoor pollutants and thermal
 conditions in schools influence student performance? A critical review of
 the literature”. In: _Indoor air_ 15.1 (2005), pp. 27-52.
-    + Not all that critical( Three studies of students, x2 from 70s)
+    + Not all that critical (Three studies of students, x2 from 70s)
     + Summary, something is there but we don't know what it is.
 
 + S. Moonie, D. A. Sterling, L. W. Figgs, et al. “The relationship
@@ -165,11 +165,14 @@ Oregon Educational Funding has key provisions that makes using schools in other 
     + The State School Fund budget is distributed equally by student across the state, but adjusted for property tax collections.
     + $1 increase in property tax collected results in $1 less in State School Fund support.
     + Measure 5 and 50 property tax limitations put most of the power with the legislature.
-  
-+ Result, equal, per-student, funding across the state with a few exceptions:
-    + Short-term, 3 year, property tax operating levies.
-    + Capital bonds
-    + A few, depends on year, school districts with few students but lots of taxable property.
+    
+# School Funding Result
+    
+Equal, per-student, funding across the state with a few exceptions:
+
++ Short-term, 3 year, property tax operating levies.
++ Capital bonds
++ A few, depends on year, school districts with few students but lots of taxable property.
 
 Much smaller inter-district funding differences than other states.
 
@@ -1234,13 +1237,16 @@ Ideally, there should be no _observable_ difference. As close as you can get to 
     + Current Student Population, free and reduced rate, ethnicity, etc.
     + Prior Test scores (Parallel movement)
     + Facility characteristics
-+ Problems:
-    + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
-    + Current  facilities characteristics are _only available for audited buildings in schools_.
-        + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
-        + Elementary near my house has 4 buildings but looks like only 2 .
 
 # In short...
+
+Problems:
+
++ Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
++ Current  facilities characteristics are _only available for audited buildings in schools_.
+    + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
+    + Elementary near my house has 4 buildings but looks like only 2 .
+
 
 We can't use building characteristics but we can use student characteristics to model treatment process.
 
@@ -1480,9 +1486,13 @@ Groupc <- "Control"
 FakeCEM<-rbind(data.frame(x = x, y = y, Group = Group),
 data.frame(x = xc, y = yc, Group = Groupc))
 
+ForWeights <- cem(treatment = "Group", data = FakeCEM)
+
 FakeCEM %>%
   ggplot(aes(x =x , y =y, group = Group)) +
-  geom_point(aes(color = Group))
+  geom_point(aes(color = Group)) + 
+  geom_vline(xintercept = ForWeights$breaks$x)+
+  geom_hline(yintercept = ForWeights$breaks$y)
 ```
 
 # With Unmatched Observations Removed
@@ -1490,13 +1500,14 @@ FakeCEM %>%
 ```{r}
 library(cem)
 
-ForWeights <- cem(treatment = "Group", data = FakeCEM)
 
 data.frame(FakeCEM, Weights = ForWeights$w) %>%
   mutate(Removed =  (Weights == 0))%>%
   mutate(Group = ifelse(Weights !=0, as.character(Group), "Removed") )%>%
   ggplot(aes(x =x , y =y, group = Group)) +
-  geom_point(aes(color = Group))
+  geom_point(aes(color = Group)) + 
+  geom_vline(xintercept = ForWeights$breaks$x)+
+  geom_hline(yintercept = ForWeights$breaks$y)
   
 
 ```
@@ -1578,8 +1589,9 @@ HELA <-  RDDCEMResults("ELALogit", RegDiscData[RegDiscData$GradeEleven >0,] )
 HRead <- RDDCEMResults("ReadingLogit", RegDiscData[ParallelTestData$GradeEleven >0,] )
 HWrite <- RDDCEMResults("WritingLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
 HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
-
 ```
+
+
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
 
@@ -1628,6 +1640,146 @@ stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = 
 
 ```
 # RDD+CEM Model Results (Attendance)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+
+# Only Eligible 
+```{r}
+library(cem)
+
+Master %>% 
+  filter(Eligible  == "YES") -> SelectionData
+
+partform <- "FixtureMod + Lamp + Controls + Insulation + Windows +  Doors+ Boiler + Distribution + Chiller + HeatRecovery + Flow  + Other + Maintenance + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+
+SelectCEMResults <- function(LHS, DataFrame) {
+  
+  Form <- as.formula(paste0(LHS, "~", partform))
+  
+  DataFrame%>%
+    ungroup() %>%
+    select(contains(LHS),
+           Treated,
+           FixtureMod,
+           Lamp,
+           Controls,
+           Insulation,
+           Windows,
+           Doors,
+           Boiler,
+           Distribution,
+           Chiller,
+           HeatRecovery,
+           Flow,
+           Other,
+           Maintenance,
+           Year,
+           MalePct,
+           WhitePct,
+           AAPct,
+           HispanicPct,
+           AsianPct,
+           FreeLunchPct)  %>%
+    na.omit() -> ForEstimate
+  
+  ForEstimate %>% select(Treated,
+                         MalePct,
+                         WhitePct,
+                         AAPct,
+                         HispanicPct,
+                         AsianPct,
+                         FreeLunchPct) -> ForCEM
+  
+  
+  mat <- cem(data = ForCEM, treatment = "Treated", keep.all = TRUE, verbose = 0, cutpoints = list(MalePct = c(0, seq(.48, .53, 6), 1), WhitePct = c(0, seq(.40, .80, 8),1), AAPct = c(0, seq(.04, .8, 8),1), HispanicPct = c(0, seq(.05, .45, 8), 1), AsianPct = c(seq(0, .2, 8), 1), FreeLunchPct = 15)
+  )
+  
+  lm(Form, data = ForEstimate, weights = mat$w)
+}
+
+
+EMath <- SelectCEMResults("MathLogit", SelectionData[SelectionData$GradeThree >0,] )
+ESci <-  SelectCEMResults("ScienceLogit", SelectionData[SelectionData$GradeThree >0,] )
+EELA <-  SelectCEMResults("ELALogit", SelectionData[SelectionData$GradeThree >0,] )
+ERead <- SelectCEMResults("ReadingLogit", SelectionData[SelectionData$GradeThree >0,] )
+EWrite <- SelectCEMResults("WritingLogit", SelectionData[SelectionData$GradeThree >0,] )
+EAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$GradeThree >0,] )
+
+
+MMath <- SelectCEMResults("MathLogit", SelectionData[SelectionData$GradeEight >0,] )
+MSci <-  SelectCEMResults("ScienceLogit", SelectionData[SelectionData$GradeEight >0,] )
+MELA <-  SelectCEMResults("ELALogit", SelectionData[SelectionData$GradeEight >0,] )
+MRead <- SelectCEMResults("ReadingLogit", SelectionData[SelectionData$GradeEight >0,] )
+MWrite <- SelectCEMResults("WritingLogit", SelectionData[SelectionData$GradeEight >0,] )
+MAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$GradeEight >0,] )
+
+
+HMath <- SelectCEMResults("MathLogit", SelectionData[SelectionData$GradeEleven >0,] )
+HSci <-  SelectCEMResults("ScienceLogit", SelectionData[SelectionData$GradeEleven >0,] )
+HELA <-  SelectCEMResults("ELALogit", SelectionData[SelectionData$GradeEleven >0,] )
+#HRead <- SelectCEMResults("ReadingLogit", SelectionData[ParallelTestData$GradeEleven >0,] )
+HWrite <- SelectCEMResults("WritingLogit", SelectionData[SelectionData$GradeEleven >0,] )
+HAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$GradeEleven >0,] )
+
+
+```
+
+
+# CEM Model Results (Math)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+EEMTypes <- c("FixtureMod", "Lamp", "Controls" ,"Insulation", "Windows", "Boiler" , "Distribution", "Chiller", "HeatRecovery", "Flow",  "Doors", "Other", "Maintenance")
+
+stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+
+# CEM Model Results (Science)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# CEM Model Results (ELA)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# CEM Model Results (Reading)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# CEM Model Results (Writing)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# CEM Model Results (Attendance)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
 
