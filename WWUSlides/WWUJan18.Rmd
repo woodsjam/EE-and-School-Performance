@@ -1182,9 +1182,9 @@ Master %>%
          Maintenance  = cumany(NewlyMaintenance),
          Flow  = cumany(NewlyFlow),
          Doors = cumany(NewlyDoors),
-         HeatRecovery= cumany(NewlyHeatRecovery)
-         Effective = cumany(Effective),
-         Placebo = cumany(Placebo)
+         HeatRecovery= cumany(NewlyHeatRecovery),
+         Effective = cumany(NewlyEffective),
+         Placebo = cumany(NewlyPlacebo)
          ) -> Master
 
 
@@ -1376,7 +1376,8 @@ For those that don't work with education data.
 
 ```{r RDDResults, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
-partform <- "Eligible + FixtureMod + Lamp + Controls + Insulation + Windows +  Doors+ Boiler + Distribution + Chiller + HeatRecovery + Flow  + Other + Maintenance + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+
+partform <- "Eligible + Placebo + Effective + Placebo:Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
 
 RDDResults <- function(LHS, DataFrame) {
   Form <- as.formula(paste0(LHS, "~", partform))
@@ -1414,7 +1415,7 @@ HAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,
 
 library(stargazer)
 
-EEMTypes <- c("FixtureMod", "Lamp", "Controls" ,"Insulation", "Windows", "Boiler" , "Distribution", "Chiller", "HeatRecovery", "Flow",  "Doors", "Other", "Maintenance")
+EEMTypes <- c("Effective", "Placebo", "Effective:Placebo")
 
 stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
 
@@ -1527,7 +1528,7 @@ data.frame(FakeCEM, Weights = ForWeights$w) %>%
 
 library(cem)
 
-partform <- "Eligible + FixtureMod + Lamp + Controls + Insulation + Windows +  Doors+ Boiler + Distribution + Chiller + HeatRecovery + Flow  + Other + Maintenance + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+partform <- "Eligible + Placebo + Effective + Placebo:Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
 
 RDDCEMResults <- function(LHS, DataFrame) {
   
@@ -1537,6 +1538,8 @@ RDDCEMResults <- function(LHS, DataFrame) {
     ungroup() %>%
     select(contains(LHS),
            Eligible, 
+           Effective,
+           Placebo,
            FixtureMod,
            Lamp,
            Controls,
@@ -1605,7 +1608,7 @@ HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven 
 
 library(stargazer)
 
-EEMTypes <- c("FixtureMod", "Lamp", "Controls" ,"Insulation", "Windows", "Boiler" , "Distribution", "Chiller", "HeatRecovery", "Flow",  "Doors", "Other", "Maintenance")
+EEMTypes <- c(Effective","Placebo","Effective:Placebo)
 
 stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
 
@@ -1664,7 +1667,7 @@ library(cem)
 Master %>% 
   filter(Eligible  == "YES") -> SelectionData
 
-partform <- "FixtureMod + Lamp + Controls + Insulation + Windows +  Doors+ Boiler + Distribution + Chiller + HeatRecovery + Flow  + Other + Maintenance + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+partform <- "Placebo + Effective + Placebo:Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
 
 SelectCEMResults <- function(LHS, DataFrame) {
   
@@ -1673,6 +1676,8 @@ SelectCEMResults <- function(LHS, DataFrame) {
   DataFrame%>%
     ungroup() %>%
     select(contains(LHS),
+           Effective,
+           Placebo,
            Treated,
            FixtureMod,
            Lamp,
@@ -1745,7 +1750,7 @@ HAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$Grade
 
 library(stargazer)
 
-EEMTypes <- c("FixtureMod", "Lamp", "Controls" ,"Insulation", "Windows", "Boiler" , "Distribution", "Chiller", "HeatRecovery", "Flow",  "Doors", "Other", "Maintenance")
+EEMTypes <- c("Effective", "Placebo", "Effective:Placebo")
 
 stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
 
