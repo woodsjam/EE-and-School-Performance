@@ -8,3 +8,5 @@ readxl
 tidyr
 ggplot2
 stargazer
+lattice
+cem

@@ -1451,3 +1451,190 @@ library(stargazer)
 stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
 
 ```
+
+# Corsened Exact Matching
+
++ RDD is sensitive to specification errors.
+    + Example: Assuming increases in porportion male have the same effect at all porportions, when therre is an increasing effect.
+    + If treated groups are more likely to be male then treatment effects are biased.
+
++ Corsened Exact Matching (CEM) reduces this problem.
+    + Break RHS variables into histograms.
+    + Multivariate histogram
+    + Remove observations that do not have a treatement and a control observation.
+
+# Hypothetical Data
+
+```{r}
+
+#Construct Fake Data
+
+x <- rnorm( 300, mean = 2, sd = 2)
+y <- rnorm( 300, mean = 2, sd = 2)
+Group <- "Treatment"
+
+xc <- rnorm( 300, mean = 6, sd = 2)
+yc <- rnorm( 300, mean = 6, sd = 2)
+Groupc <- "Control"
+
+FakeCEM<-rbind(data.frame(x = x, y = y, Group = Group),
+data.frame(x = xc, y = yc, Group = Groupc))
+
+FakeCEM %>%
+  ggplot(aes(x =x , y =y, group = Group)) +
+  geom_point(aes(color = Group))
+```
+
+# With Unmatched Observations Removed
+
+```{r}
+library(cem)
+
+ForWeights <- cem(treatment = "Group", data = FakeCEM)
+
+data.frame(FakeCEM, Weights = ForWeights$w) %>%
+  mutate(Removed =  (Weights == 0))%>%
+  mutate(Group = ifelse(Weights !=0, as.character(Group), "Removed") )%>%
+  ggplot(aes(x =x , y =y, group = Group)) +
+  geom_point(aes(color = Group))
+  
+
+```
+
+
+# RDD+CEM Model Results (Math)
+
+```{r RDDCEMResults, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+library(cem)
+
+partform <- "Eligible + FixtureMod + Lamp + Controls + Insulation + Windows +  Doors+ Boiler + Distribution + Chiller + HeatRecovery + Flow  + Other + Maintenance + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+
+RDDCEMResults <- function(LHS, DataFrame) {
+  
+  Form <- as.formula(paste0(LHS, "~", partform))
+  
+  DataFrame%>%
+    ungroup() %>%
+    select(contains(LHS),
+           Eligible, 
+           FixtureMod,
+           Lamp,
+           Controls,
+           Insulation,
+           Windows,
+           Doors,
+           Boiler,
+           Distribution,
+           Chiller,
+           HeatRecovery,
+           Flow,
+           Other,
+           Maintenance,
+           Year,
+           MalePct,
+           WhitePct,
+           AAPct,
+           HispanicPct,
+           AsianPct,
+           FreeLunchPct)  %>%
+    na.omit() -> ForEstimate
+  
+  ForEstimate %>% select(Eligible,
+                         MalePct,
+                         WhitePct,
+                         AAPct,
+                         HispanicPct,
+                         AsianPct,
+                         FreeLunchPct) -> ForCEM
+
+  
+  mat <- cem(data = ForCEM, treatment = "Eligible", keep.all = TRUE, verbose = 0, cutpoints = list(MalePct = c(0, seq(.48, .53, 6), 1), WhitePct = c(0, seq(.40, .80, 8),1), AAPct = c(0, seq(.04, .8, 8),1), HispanicPct = c(0, seq(.05, .45, 8), 1), AsianPct = c(seq(0, .2, 8), 1), FreeLunchPct = 15)
+  )
+
+  lm(Form, data = ForEstimate, weights = mat$w)
+}
+
+
+EMath <- RDDCEMResults("MathLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+ESci <-  RDDCEMResults("ScienceLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+EELA <-  RDDCEMResults("ELALogit", RegDiscData[RegDiscData$GradeThree >0,] )
+ERead <- RDDCEMResults("ReadingLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+EWrite <- RDDCEMResults("WritingLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+EAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+
+  
+MMath <- RDDCEMResults("MathLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MSci <-  RDDCEMResults("ScienceLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MELA <-  RDDCEMResults("ELALogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MRead <- RDDCEMResults("ReadingLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MWrite <- RDDCEMResults("WritingLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+
+
+HMath <- RDDCEMResults("MathLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HSci <-  RDDCEMResults("ScienceLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HELA <-  RDDCEMResults("ELALogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HRead <- RDDCEMResults("ReadingLogit", RegDiscData[ParallelTestData$GradeEleven >0,] )
+HWrite <- RDDCEMResults("WritingLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+
+```
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+EEMTypes <- c("FixtureMod", "Lamp", "Controls" ,"Insulation", "Windows", "Boiler" , "Distribution", "Chiller", "HeatRecovery", "Flow",  "Doors", "Other", "Maintenance")
+
+stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+
+# RDD+CEM Model Results (Science)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD+CEM Model Results (ELA)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD+CEM Model Results (Reading)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD+CEM Model Results (Writing)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD+CEM Model Results (Attendance)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+
+
