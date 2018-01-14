@@ -1,0 +1,10 @@
+base
+dplyr
+knitr
+stringr
+bindrcpp
+readr
+readxl
+tidyr
+ggplot2
+stargazer

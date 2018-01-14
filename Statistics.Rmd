@@ -113,11 +113,91 @@ partform <- "Eligible + FixtureMod + Boiler + Lamp + Distribution + Chiller + In
 
 SimpleResults <- BasicResults(RegDiscData[RegDiscData$GradeThree > 0,], partform, LHS )
 
-lapply(SimpleResults, summary)
+lapply(BasicResults(RegDiscData[RegDiscData$GradeThree > 0,], partform, LHS ), summary)
+
+lapply(BasicResults(RegDiscData[RegDiscData$GradeEight > 0,], partform, LHS ), summary)
+
+lapply(BasicResults(RegDiscData[RegDiscData$GradeEleven > 0,], partform, LHS ), summary)
+
 
 summary(lm(AttendanceLogit ~ Eligible + FixtureMod + Boiler + Lamp + Distribution + Chiller + Insulation + Windows + Other + Maintenance + Flow + Doors + HeatRecovery + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = RegDiscData[RegDiscData$GradeThree > 0 ,] ))
 
 
-```
+summary(lm(AttendanceLogit ~ Eligible + FixtureMod + Boiler + Lamp + Distribution + Chiller + Insulation + Windows + Other + Maintenance + Flow + Doors + HeatRecovery + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = RegDiscData[RegDiscData$GradeEight > 0 ,] ))
 
+
+summary(lm(AttendanceLogit ~ Eligible + FixtureMod + Boiler + Lamp + Distribution + Chiller + Insulation + Windows + Other + Maintenance + Flow + Doors + HeatRecovery + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = RegDiscData[RegDiscData$GradeEleven > 0 ,] ))
+
+
+```
+ Now for the parallel movement check.  No evidence that it is not
+ 
+```{r}
+
+
+TestParallel <- "EverTreated*as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct "
+
+library(dplyr)
+
+ParallelTestData <- RegDiscData %>%
+  filter(Treated == FALSE)
+
+lapply(BasicResults(ParallelTestData[ParallelTestData$GradeThree > 0,], TestParallel, LHS ), summary)
+
+lapply(BasicResults(ParallelTestData[ParallelTestData$GradeEight > 0,], TestParallel, LHS ), summary)
+
+lapply(BasicResults(ParallelTestData[ParallelTestData$GradeEleven > 0,], TestParallel, LHS ), summary)
+
+
+summary(lm(AttendanceLogit ~ EverTreated*as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = ParallelTestData[ParallelTestData$GradeThree > 0 ,] ))
+
+summary(lm(AttendanceLogit ~EverTreated*as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = ParallelTestData[ParallelTestData$GradeEight > 0 ,] ))
+
+summary(lm(AttendanceLogit ~EverTreated*as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct, data = ParallelTestData[ParallelTestData$GradeEleven > 0 ,] ))
+
+
+
+```
+ 
+ 
+ # Now on to refinements with CEM
+ 
+```{r}
+library(cem)
+library(dplyr)
+
+RegDiscData %>%
+  ungroup() %>%
+  select(Eligible,
+         MalePct,
+         WhitePct,
+         AAPct,
+         HispanicPct,
+         AsianPct,
+         FreeLunchPct)%>%
+  na.omit() -> TestCEM
+
+mat <- cem(data = TestCEM, treatment = "Eligible", drop = c("SchoolID", "Year", "ELALogit"), keep.all = TRUE)
+
+mat$X %>% View()
+hist(mat$w)
+
+vars <- c("MalePct",
+         "WhitePct",
+         "AAPct",
+         "HispanicPct",
+         "AsianPct",
+         "FreeLunchPct")
+
+imbalance(group = TestCEM$Eligible, data = TestCEM[vars])
+
+relax.cem(mat, TestCEM, depth =2)
+
+# What I have to do is CEM on the demographic data with school id and year hidden.  Then get the ids and use that to select the ones I need from the full dataset.
+
+
+
+```
+ 
+ 
 

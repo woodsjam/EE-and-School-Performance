@@ -1,19 +1,34 @@
 ---
 title: "The Effect of Energy Efficiency Measures on K12 Educational Performance"
-output: beamer_presentation
+shorttitle: "EEMs and K12"
+author: "James Woods"
+institute: "Portland State University"
+output:
+  beamer_presentation:
+    theme: "Antibes"
 bibliography: ../Bibliography.bib
 citation_package: natbib
 biblio-style: "apalike"
+header-includes:
+    - \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, cache=TRUE)
+ 
 ```
 
 # Abstract
 
 
 This is early work.  Still much to do.
+
+# History of Current Work
+
++ Noticed this when we made SB 1149 improvements on our schools.
++ Gave topics to 	John Bauer, Timothy Hulseman, Virgina Saraswati in Winter 2017 as a topic in Energy Economics
++ They learned enough econometrics and did a good enough job to present at an engineering conference.
++ This takes a different approach to the same topic.
 
 # Background
 
@@ -98,13 +113,13 @@ academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
 
 + Students got stuck in the 60s-70s air conditioning daylighting vs air conditioning battle.
 + Air quality is important but we don't know exactly what part
-    + Keep in mind that allergenic mold concentrations, colony forming bodies, can change by factor of 10 in a few hours.
+    + Keep in mind that allergenic mold concentrations, colony forming bodies per liter, can change by factor of 10 in a few hours.
     + Hard to measure.
       
 # Why Oregon Schools?
 
 + Nice features that remove many, but not all, self-selection problems.
-+ Decison making cutoffs are based on energy savings, not educational outcomes.
++ Decision making cutoffs are based on energy savings, not educational outcomes.
 
 + Still problems
     + Data shortcoming ... as we go along.
@@ -150,8 +165,8 @@ Oregon Educational Funding has key provisions that makes using schools in other 
     + The State School Fund budget is distributed equally by student across the state, but adjusted for property tax collections.
     + $1 increase in property tax collected results in $1 less in State School Fund support.
     + Measure 5 and 50 property tax limitations put most of the power with the legislature.
-    
-+ Result, equal, per-student funding across the state with a few exceptions:
+  
++ Result, equal, per-student, funding across the state with a few exceptions:
     + Short-term, 3 year, property tax operating levies.
     + Capital bonds
     + A few, depends on year, school districts with few students but lots of taxable property.
@@ -192,7 +207,7 @@ Mostly what you would expect
 
 + Most of the items you would never notice unless you were an expert looking  or listening for them.
 + There are a few that could have an impact on the educational environment.
-    + Double or Triple Glazed Windows ( Sound, Moisture Control)
+    + Double or Triple Glazed Windows (Sound, Moisture Control)
     + Cavity Insulation (Sound, Moisture Control)
     + Lighting Quality Improvements (Daylighting)
 
@@ -210,7 +225,7 @@ The non-impactful EEMs can provide a placebo effect robustness check on the effe
     + Recorded annually for each school.
     + Intermediate indicator.  The more often you go to school the better you do.
 + Environmental Improvements can reduce teacher absenteeism.
-    + Must be aquired district by district and year by year.
+    + Must be acquired district-by-district and year-by-year.
 + Some produce better learning environments, less distraction.  We can use the annual standardized testing results.
     + Everyone in the same grade takes the same test, but the test, and the levels can be different from year-to-year.
 
@@ -278,6 +293,7 @@ EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
 
 + Controls are frequently occupancy sensors and day-lighting controls
 + Fixtures are described in detail later as gym, exterior, etc.
++ Note that there are large enough numbers of educationally effective and placebo EEMs.
 
 # Electric Utilities
 
@@ -325,55 +341,55 @@ AllSchools %>%
 
 ```{r MapBoarderDistricts, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-library(maptools)
-Sto <- gpclibPermit()
-
-Schools <- readShapePoly("../MapData/cb_2016_41_unsd_500k/cb_2016_41_unsd_500k.shp")
-
-library(ggmap)
-
-mapImage <- get_map(location = "oregon", zoom = 7, maptype = "toner")
-
-
-library(RColorBrewer)
-colors <- brewer.pal(9, "BuGn")
-
-# Subset SchoolBound so only eligible districts
+# library(maptools)
+# Sto <- gpclibPermit()
 # 
-
-
-Split <- function(x) { last(str_split(x, boundary("word"))[[1]])
-}
-
-SplitV <- Vectorize(Split)
-
-
-
-DistNumbers <- SplitV(as.character(BorderDistricts$District.Name))
-
-# Fix so that only the eligible districts show.
-#Schools@data$NAME
-
-SchoolBound <- fortify(Schools)
-
-
-ggmap(mapImage) 
-# +
-#   geom_polygon(aes(x = long,
-#                    y = lat,
-#                    group = group),
-#                data = SchoolBound,
-#                color = colors[9],
-#                fill = colors[6],
-#                alpha = 0.5) +
-#   labs(x = "Longitude",
-#        y = "Latitude")
+# Schools <- readShapePoly("../MapData/cb_2016_41_unsd_500k/cb_2016_41_unsd_500k.shp")
 # 
+# library(ggmap)
+# 
+# mapImage <- get_map(location = "oregon", zoom = 7, maptype = "toner")
+# 
+# 
+# library(RColorBrewer)
+# colors <- brewer.pal(9, "BuGn")
+# 
+# # Subset SchoolBound so only eligible districts
+# # 
+# 
+# 
+# Split <- function(x) { last(str_split(x, boundary("word"))[[1]])
+# }
+# 
+# SplitV <- Vectorize(Split)
+# 
+# 
+# 
+# DistNumbers <- SplitV(as.character(BorderDistricts$District.Name))
+# 
+# # Fix so that only the eligible districts show.
+# #Schools@data$NAME
+# 
+# SchoolBound <- fortify(Schools)
+# 
+# 
+# ggmap(mapImage) 
+# # +
+# #   geom_polygon(aes(x = long,
+# #                    y = lat,
+# #                    group = group),
+# #                data = SchoolBound,
+# #                color = colors[9],
+# #                fill = colors[6],
+# #                alpha = 0.5) +
+# #   labs(x = "Longitude",
+# #        y = "Latitude")
+# # 
 
 ```
 
  
-# How Many District? Schools?
+# How Many District? Schools? (2016)
 
 ```{r EligibleSchools, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -1099,7 +1115,7 @@ Master %>%
 
 # Add Fractional student population descriptions and logit transform the  response.
 #
-LogitTransform <- function(x) (x/100)/(1-(x/100))
+LogitTransform <- function(x) log((x/100)/(1-(x/100)))
 
 
 Master %>%
@@ -1125,25 +1141,64 @@ Master %>%
   left_join(BorderDistricts, by = c("DistrictID" = "District.ID")) %>%
   mutate(BorderDistrict  = if_else(is.na(nn), FALSE, TRUE)) -> Master
 
+Master %>% 
+  mutate(Type = as.factor(Type)) -> Master
+
+# Newly and Treated by EEM Type
+
+Master %>%
+  mutate(
+     NewlyFixtureMod = FixtureMod ,
+     NewlyBoiler = Boiler,
+     NewlyLamp = Lamp,
+     NewlyDistribution = Distribution, 
+     NewlyChiller = Chiller, 
+     NewlyInsulation = Insulation, 
+     NewlyWindows = Windows, 
+     NewlyOther = Other,
+     NewlyMaintenance = Maintenance,
+     NewlyFlow = Flow,
+     NewlyDoors = Doors,
+     NewlyHeatRecovery = HeatRecovery
+  ) %>%
+  arrange(SchoolID, Year ) %>%
+  group_by(SchoolID, DistrictID) %>%
+  mutate(FixtureMod = cumany(NewlyFixtureMod),
+         Boiler= cumany(NewlyBoiler),
+         Lamp   = cumany(NewlyLamp),
+         Distribution   = cumany(NewlyDistribution),
+         Chiller  = cumany(NewlyChiller),
+         Insulation  = cumany(NewlyInsulation),
+         Windows  = cumany(NewlyWindows),
+         Other  = cumany(NewlyOther),
+         Maintenance  = cumany(NewlyMaintenance),
+         Flow  = cumany(NewlyFlow),
+         Doors = cumany(NewlyDoors),
+         HeatRecovery= cumany(NewlyHeatRecovery)
+         ) -> Master
+
+
 ```
     
 
 # Test Scores
 
-There are four tests given over the sample period, school years ending 2010 - 2016.
+There are five tests given over the sample period, school years ending 2010 - 2016.
 
 + English Language Arts 2015-2016
-    + Writting 2010 - 2014 (High School Only)
+    + Writing 2010 - 2014 (High School Only)
     + Reading 2010 - 2014
 + Math
 + Science
+
+But, some elementary and secondary students will take the high school test.
 
 # What is Reported
 
 What is reported is the fraction of students at each school that 'meet standards'.  
 
 + That standard changes from year-to-year
-+ Year is an important control variable
++ Year is an important control variable, but will be surpressed in later tables
 
 # Percent Passing Math By School (State)
 ```{r MathPassing, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -1154,11 +1209,11 @@ library(ggplot2)
 Master %>%
   ungroup() %>%
   select(Year,
-         ELA = ELA.Pct.Met,
-         Math = Math.Pct.Met,
-         Reading = Reading.Pct.Met,
-         Science = Science.Pct.Met,
-         Writing = Writing.Pct.Met,
+         ELA,
+         Math,
+         Reading,
+         Science,
+         Writing,
          SchoolID,
          GradeThree,
          GradeEight,
@@ -1173,11 +1228,11 @@ Master %>%
 
 # How Different are Treated, Untreated and Ineligible schools?
 
-Ideally, there should be no _obserable_ difference. As close as you can get to random assignment.
+Ideally, there should be no _observable_ difference. As close as you can get to random assignment.
 
 + Dimensions:
     + Current Student Population, free and reduced rate, ethnicity, etc.
-    + Prior Test scores
+    + Prior Test scores (Parallel movement)
     + Facility characteristics
 + Problems:
     + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
@@ -1185,7 +1240,9 @@ Ideally, there should be no _obserable_ difference. As close as you can get to r
         + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
         + Elementary near my house has 4 buildings but looks like only 2 .
 
-In short, we can't use building characteristics but we can use student characteristics to model treatment process.
+# In short...
+
+We can't use building characteristics but we can use student characteristics to model treatment process.
 
 # Approaches
 
@@ -1193,79 +1250,204 @@ In short, we can't use building characteristics but we can use student character
     + Helps control for teacher salaries
     + Other district policies
 + Ineligible schools as control
-    + Simple regression with student population controls.
-    + Refine with a matching method later.
+    + _Regession Disontinuity Design_ (RDD) with student population controls.
+    + Refine with a matching method, _Coarsened Exact Matching_ (CEM) and Synthetic Control Method (SCM).
 + Eligible but untreated schools as controls
-    + Must start with matching.
-
-# Is there a there there?
-
-Two Views:
-
-+ Fraction of students passing each of the tests
-+ Student Attendance
-
-Note:
-
-+ No contols for student population
-+ Only ineligible schools and schools eventually treated.
-+ Separate Results for elementary, middle and high schools.
-+ Year controls
-
-
-```{r ThereThere, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-
-BasicResults <- function(DataFrame, RHS){ 
-  list(
-lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeThree>0,]),
-
-lm(as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Reading.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Science.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-lm( as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEight>0,]),
-
-lm( as.formula(paste("ELA.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm( as.formula(paste("Math.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste("Reading.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste("Science.Pct.Met ~", RHS)), DataFrame[DataFrame$GradeEleven>0,]),
-lm(as.formula(paste("Writing.Pct.Met~", RHS)), DataFrame[DataFrame$GradeEleven>0,]))
-}
-
-OnlyBorder <- Master %>%
-  semi_join(BorderDistricts, by = c("DistrictID" = "District.ID"))
-
-OnlyBorder %>% 
-  filter(Eligible == TRUE | EverTreated ==TRUE) ->FirstTest
-
-partform <- "EverTreated+Treated + as.factor(Year)"
-SimpleResults <- BasicResults(FirstTest, partform)
-
-```
-
-# Elementary
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, results = "asis"}
-library(stargazer)
-
-stargazer(SimpleResults[[1]], SimpleResults[[2]], SimpleResults[[3]],SimpleResults[[4]], keep = c("Constant", "Eligible", "Treated"), header = FALSE, type = "latex", dep.var.labels = c("ELA", "Math", "Reading", "Science", "Writing"), column.sep.width = "1pt")
-
-```
-
+    + CEM
+    + SCM
 
 # Methods
 
-+ Corsened exact matching 
++ Regression Discontinuity Design (RDD)
+    + Old...1960
+    + Arbitrary line cutting eligible and not.
+    + "As good as Randomized Control Design (RCD)" with many caveats.
+    + Can be sensitive to specification bias.
++ Coarsened exact matching (CEM)
     + Iacus, King, and Porro (2012)
     + Define what you mean by close enough in multiple dimensions
     + Find the close enough match on observable dimensions
-    + Excluded treated with no match
-+ Synthetic control method 
+    + Reduces sensitivity to specification bias.
++ Synthetic control method (SCM)
     + Card, D. and A. Krueger (1994)
     + Mix of differences in differences and matching
-    + Weights basket of controls to achieve better results
+    + Weights basket of controls to achieve better results.
 
+# Cover Many Different Assumptions about Endogenaity
+
+
+![](AnalysisPlan.png)
+
+# Simple RDD
+
++ Strong prior that treatment, installing EEMs, is unrelated to student characteristics
+
++ RDD requires at least parallel movement in response, test scores in this case, 
+
+# Parallel Movement
+
+$$ logit(Meet~Standard) = f(EverTreated,  EverTreated * Year; Gender, Race/Ethnicity, FreeLunch, Year)$$
+
++ Border districts with both treated and untreated eligible schools.
++ Only pre-treatement observations of treated schools.
++ Simple F-test with and without Eligible
+
+# F-Test for Parallel Movement
+
+```{r}
+
+
+Master %>%
+  filter(BorderDistrict == TRUE) %>%
+  filter(Eligible == "NO"| EverTreated == TRUE) -> RegDiscData
+
+ParallelTestData <- RegDiscData %>%
+  filter(Treated == FALSE)
+
+BaseParallel <- "EverTreated*as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+AlternativeParallel <- "as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+
+
+TestParallel <- function(LHS, dataframe){
+  WithFormula <- as.formula(paste0(LHS, "~", BaseParallel))
+  WOFormula <-  as.formula(paste0(LHS, "~", AlternativeParallel))
+  
+  WLm <- lm(WithFormula, data = dataframe)
+  WOlm <- lm(WOFormula, data = dataframe)
+  
+  Res <- anova(WLm, WOlm)
+  round(Res$`Pr(>F)`[2],3)
+}
+
+EMath <- TestParallel("MathLogit", ParallelTestData[ParallelTestData$GradeThree >0,] )
+ESci <-  TestParallel("ScienceLogit", ParallelTestData[ParallelTestData$GradeThree >0,] )
+EELA <-  TestParallel("ELALogit", ParallelTestData[ParallelTestData$GradeThree >0,] )
+ERead <- TestParallel("ReadingLogit", ParallelTestData[ParallelTestData$GradeThree >0,] )
+EWrite <- TestParallel("WritingLogit", ParallelTestData[ParallelTestData$GradeThree >0,] )
+  
+MMath <- TestParallel("MathLogit", ParallelTestData[ParallelTestData$GradeEight >0,] )
+MSci <-  TestParallel("ScienceLogit", ParallelTestData[ParallelTestData$GradeEight >0,] )
+MELA <-  TestParallel("ELALogit", ParallelTestData[ParallelTestData$GradeEight >0,] )
+MRead <- TestParallel("ReadingLogit", ParallelTestData[ParallelTestData$GradeEight >0,] )
+MWrite <- TestParallel("WritingLogit", ParallelTestData[ParallelTestData$GradeEight >0,] )
+
+HMath <- TestParallel("MathLogit", ParallelTestData[ParallelTestData$GradeEleven >0,] )
+HSci <-  TestParallel("ScienceLogit", ParallelTestData[ParallelTestData$GradeEleven >0,] )
+HELA <-  TestParallel("ELALogit", ParallelTestData[ParallelTestData$GradeEleven >0,] )
+HRead <- TestParallel("ReadingLogit", ParallelTestData[ParallelTestData$GradeEleven >0,] )
+HWrite <- TestParallel("WritingLogit", ParallelTestData[ParallelTestData$GradeEleven >0,] )
+
+
+```
+
+School Type | Math | Science | ELA | Reading | Writing|
+-----       |---- |-----    |---- |-----  |-----  |
+High| `r HMath`   | `r HSci`      | `r HELA` |  `r HRead` |  `r HWrite`    |
+Middle| `r MMath`   | `r MSci`      | `r MELA` |  `r MRead`  |      |
+Elementary| `r EMath`   | `r ESci`      | `r EELA` |  `r ERead`  |      |
+
++ Blanks for non-required tests
++ ELA started in 2015, no Middle or High Schools treated.
++ Slight concern with Middle and Elementary Science test.
+
+# Comments on Demographic Controls
+
+For those that don't work with education data.
+
++ Male: Correlated with lower pass rates.
++ Free Reduced: Correlated with lower pass rates.
++ Surpressed in later tables
+
+# RDD Model Results (Math)
+
+```{r RDDResults, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+partform <- "Eligible + FixtureMod + Lamp + Controls + Insulation + Windows +  Doors+ Boiler + Distribution + Chiller + HeatRecovery + Flow  + Other + Maintenance + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+
+RDDResults <- function(LHS, DataFrame) {
+  Form <- as.formula(paste0(LHS, "~", partform))
+  lm(Form, data = DataFrame)
+}
+
+
+EMath <- RDDResults("MathLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+ESci <-  RDDResults("ScienceLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+EELA <-  RDDResults("ELALogit", RegDiscData[RegDiscData$GradeThree >0,] )
+ERead <- RDDResults("ReadingLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+EWrite <- RDDResults("WritingLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+EAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeThree >0,] )
+
+  
+MMath <- RDDResults("MathLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MSci <-  RDDResults("ScienceLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MELA <-  RDDResults("ELALogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MRead <- RDDResults("ReadingLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MWrite <- RDDResults("WritingLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+MAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEight >0,] )
+
+
+HMath <- RDDResults("MathLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HSci <-  RDDResults("ScienceLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HELA <-  RDDResults("ELALogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HRead <- RDDResults("ReadingLogit", RegDiscData[ParallelTestData$GradeEleven >0,] )
+HWrite <- RDDResults("WritingLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+HAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,] )
+
+
+```
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+EEMTypes <- c("FixtureMod", "Lamp", "Controls" ,"Insulation", "Windows", "Boiler" , "Distribution", "Chiller", "HeatRecovery", "Flow",  "Doors", "Other", "Maintenance")
+
+stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+
+# RDD Model Results (Science)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD Model Results (ELA)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD Model Results (Reading)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD Model Results (Writing)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
+# RDD Model Results (Attendance)
+
+```{r message=FALSE, warning=FALSE, results= "asis"}
+
+library(stargazer)
+
+stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+
+```
