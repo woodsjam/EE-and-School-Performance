@@ -6,6 +6,7 @@ institute: "Portland State University"
 output:
   beamer_presentation:
     theme: "Antibes"
+    keep_tex: true
 bibliography: ../Bibliography.bib
 citation_package: natbib
 biblio-style: "apalike"
@@ -20,6 +21,7 @@ knitr::opts_chunk$set(echo = FALSE, cache=TRUE)
 
 # Abstract
 
+Bla
 
 This is early work.  Still much to do.
 
@@ -1484,6 +1486,8 @@ stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header
 
 #Construct Fake Data
 
+library(cem)
+
 x <- rnorm( 300, mean = 2, sd = 2)
 y <- rnorm( 300, mean = 2, sd = 2)
 Group <- "Treatment"
@@ -1608,7 +1612,7 @@ HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven 
 
 library(stargazer)
 
-EEMTypes <- c(Effective","Placebo","Effective:Placebo)
+EEMTypes <- c("Effective","Placebo","Effective:Placebo")
 
 stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
 
