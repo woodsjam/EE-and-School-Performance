@@ -6,7 +6,7 @@ institute: "Portland State University"
 output:
   beamer_presentation:
     theme: "Antibes"
-    keep_tex: true
+#    keep_tex: true
 bibliography: ../Bibliography.bib
 citation_package: natbib
 biblio-style: "apalike"
@@ -21,14 +21,15 @@ knitr::opts_chunk$set(echo = FALSE, cache=TRUE)
 
 # Abstract
 
-Bla
+\begin{small}
+Energy efficiency measures (EEMs) frequently include measures that directly improve the learning environment.  This study will use a variety of causal identification techniques to establish if the installation of EEMs results in a measurable increase in student performance as measured by standardized tests and attendance.  Oregon's K12 funding structure, which levelizes funding per student across districts, and the requirements that state funding for EEMs in schools restricts be used in areas served by IOUs, assists in this identification.
+\end{small}
 
-This is early work.  Still much to do.
 
 # History of Current Work
 
-+ Noticed this when we made SB 1149 improvements on our schools.
-+ Gave topics to 	John Bauer, Timothy Hulseman, Virgina Saraswati in Winter 2017 as a topic in Energy Economics
++ Noticed this when we made SB 1149 improvements on to Parkrose Schools.
++ Gave topics to 	John Bauer, Timothy Hulseman, Virgina Saraswati in Winter 2017 as a topic in Energy Economics.
 + They learned enough econometrics and did a good enough job to present at an engineering conference.
 + This takes a different approach to the same topic.
 
@@ -55,8 +56,9 @@ In short, the opposite of what economics is doing with program evaluation, but m
 
 + Decisions to improve structures is a financial decision -- money saved on energy.
 + No financial gain, not allowed to participate.
++ Improvements in student/staff health and the lifetime effects of academic performance dwarf the value of energy savings.
 
-Improvements in student/staff health and the lifetime effects of academic performance dwarf the value of energy savings.
+Almost a perfect framework for regression discontinuity design (RDD).
 
 # Daylighting (Sampling)
 
@@ -85,8 +87,7 @@ Society_ 31.2 (2002), pp. 101-114.
 
 + M. H. Nicklas and G. B. Bailey. “Analysis of the Performance of
 Students in Daylit Schools.” (1996).
-    + "... [daylit] schools outperformed students attending artificially lighted
-schools by 5 to 14 percent."
+    + "... [daylit] schools outperformed students attending artificially lighted schools by 5 to 14 percent."
 
 # Indoor Air Quality (Sampling)
 
@@ -128,12 +129,10 @@ academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
     + Standardized tests are not standard from year-to-year.
     + Building data is not so important to departments of education.
 
-Now, on to the data ...
-
 # SB 1149
 
 + [SB 1149 (1999)](https://www.oregonlegislature.gov/bills_laws/lawsstatutes/1999orLaw0865.html) was Oregon's deregulation bill.
-    + It was part of the implementation of FERC 888.
+    + It was part of the implementation of FERC 888/889.
     + Established a public purpose charge that funds thing like The Energy Trust of Oregon.
 + The 3% Public Purpose Charge was collected by _almost_ all the IOUs.
     + Pacificorp and PGE collect, but Idaho Power in Eastern Oregon does not.
@@ -154,13 +153,12 @@ Schools using SB 1149 public purpose funds:
 
 + Not all districts are eligible.
 + Not all schools within districts are eligible.
++ Eligibility is not triggered by attendance or standardized test performance.
 
 
 Makes it easier to establish a natural control group for any treated school by using others in the district.
 
 # Educational Funding in Oregon
-
-Oregon Educational Funding has key provisions that makes using schools in other district more attractive than other states.
 
 + 1991 Oregon establishes an Equalization Formula:
     + The legislature establishes a biennial K12 State School Fund Budget
@@ -175,6 +173,7 @@ Equal, per-student, funding across the state with a few exceptions:
 + Short-term, 3 year, property tax operating levies.
 + Capital bonds
 + A few, depends on year, school districts with few students but lots of taxable property.
++ Small rural districts get more
 
 Much smaller inter-district funding differences than other states.
 
@@ -222,7 +221,7 @@ Mostly what you would expect
 + Treated schools may or may not have educationally impactful EEMs.
 + Treated schools could have a mix.
 
-The non-impactful EEMs can provide a placebo effect robustness check on the effects of the impactful EEMs on educational performance.
+The non-impactful EEMs can provide a placebo effect or robustness check on the effects of the impactful EEMs on educational performance.
 
 # How to Measure Educational Impact
 
@@ -237,10 +236,12 @@ The non-impactful EEMs can provide a placebo effect robustness check on the effe
 # Key Points
 
 + Test scores are the main indicator but for some EEMs, absenteeism and attendance _may_ be good predictors.
-+ We have some candidates for instruments if we wish to take that route.
++ We have some candidates for instruments if we wish to take that route in future.
 
 
-# Data Details
+# 
+
+Data Details
 
 # Schools Program Audit Requirements
 
@@ -282,7 +283,6 @@ EEMs %>% select(Year  = ImplementedYear) %>%
   kable()
 ```
 
-Note spikes in installation.
 
 # Types of Installed Measures
 
@@ -301,7 +301,8 @@ EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
 + Note that there are large enough numbers of educationally effective and placebo EEMs.
 + Each EEM was categorized as either Educationally Effective or Placebo.
     + Exterior, gym, and other non-instructional areas are all placebo.
-    + Classroom lighting and controls, shell,  window and ventilation improvmenents are all effective.
+    + Classroom lighting and controls, shell, window and ventilation improvements are all effective.
++ A school can have a mix each year.    
 
 # Electric Utilities
 
@@ -312,8 +313,6 @@ EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
 + Most of population is served by IOUs
 + Large tracts of COUs
 + Only Pacificorp and PGE schools are eligible.
-
-# Districts with Eligible Schools
 
 ```{r BuildBorderDistricts, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
@@ -1203,14 +1202,14 @@ There are five tests given over the sample period, school years ending 2010 - 20
 + Math
 + Science
 
-But, some elementary and secondary students will take the high school test.
+But, some elementary and middle school students will take the high school tests and some High school students need to take elementary and middle school tests.
 
 # What is Reported
 
 What is reported is the fraction of students at each school that 'meet standards'.  
 
 + That standard changes from year-to-year
-+ Year is an important control variable, but will be surpressed in later tables
++ Year is an important control variable, but will be suppressed in later tables
 
 # Percent Passing Math By School (State)
 ```{r MathPassing, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -1238,6 +1237,10 @@ Master %>%
 
 # Getting at Causality, the Identification Problem
 
++ We don't have random assignment.
++ Regression discontinuity, because of the elgibility requirements, is very close.
++ Room for improving the match of observable differences accross treated and untreated schools.
+
 # How Different are Treated, Untreated and Ineligible schools?
 
 Ideally, there should be no _observable_ difference. As close as you can get to random assignment.
@@ -1247,9 +1250,7 @@ Ideally, there should be no _observable_ difference. As close as you can get to 
     + Prior Test scores (Parallel movement)
     + Facility characteristics
 
-# In short...
-
-Problems:
+# Not Ideal
 
 + Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
 + Current  facilities characteristics are _only available for audited buildings in schools_.
@@ -1261,13 +1262,13 @@ We can't use building characteristics but we can use student characteristics to 
 
 # Approaches
 
-+ Only looking at schools in districts that have both eligible and ineligible schools
++ Only looking at schools in districts that have both eligible and ineligible schools, _border districts_.
     + Helps control for teacher salaries
     + Other district policies
-+ Ineligible schools as control
++ Ineligible schools in border districts as control
     + _Regession Disontinuity Design_ (RDD) with student population controls.
     + Refine with a matching method, _Coarsened Exact Matching_ (CEM).
-+ Eligible but untreated schools as controls
++ Eligible but untreated schools in _all districts_ as controls
     + CEM
 
 # Methods
@@ -1282,10 +1283,6 @@ We can't use building characteristics but we can use student characteristics to 
     + Define what you mean by close enough in multiple dimensions
     + Find the close enough match on observable dimensions
     + Reduces sensitivity to specification bias.
-<!-- + Synthetic control method (SCM) -->
-<!--     + Card, D. and A. Krueger (1994) -->
-<!--     + Mix of differences in differences and matching -->
-<!--     + Weights basket of controls to achieve better results. -->
 
 # Cover Many Different Assumptions about Endogenaity
 
@@ -1300,13 +1297,13 @@ We can't use building characteristics but we can use student characteristics to 
 
 # Parallel Movement
 
-$$ logit(Meet~Standard) =\\
-f(EverTreated,  EverTreated * Year;\\
-Gender, Race/Ethnicity, FreeLunch, Year)$$
+$$ ln \left( \frac{p}{1-p} \right) = \beta_0 X_0 + \beta_1 X_1$$
 
-+ Border districts with both treated and untreated eligible schools.
-+ Only pre-treatement observations of treated schools.
-+ Simple F-test with and without Eligible
+
++ $p$: Fraction of students meeting standards for each test 
++ $X_0$: Ever Treated and Year interacted
++ $X_1$: Control variables, race/ethnicity and Free and Reduced Lunch, Year
++ Simple F-test of $\beta_0 = \vec{0}$.
 
 # F-Test for Parallel Movement
 
@@ -1372,14 +1369,14 @@ For those that don't work with education data.
 
 + Male: Correlated with lower pass rates.
 + Free Reduced: Correlated with lower pass rates.
-+ Surpressed in later tables
++ Suppressed in later tables
 
 # RDD Model Results (Math)
 
 ```{r RDDResults, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
 
-partform <- "Eligible + Placebo + Effective + Placebo:Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+partform <- "Eligible + Placebo + Effective  + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
 
 RDDResults <- function(LHS, DataFrame) {
   Form <- as.formula(paste0(LHS, "~", partform))
@@ -1417,9 +1414,9 @@ HAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,
 
 library(stargazer)
 
-EEMTypes <- c("Effective", "Placebo", "Effective:Placebo")
+EEMTypes <- c("Effective", "Placebo")
 
-stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
@@ -1429,7 +1426,7 @@ stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FAL
 
 library(stargazer)
 
-stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD Model Results (ELA)
@@ -1438,7 +1435,7 @@ stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD Model Results (Reading)
@@ -1447,7 +1444,7 @@ stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD Model Results (Writing)
@@ -1456,7 +1453,7 @@ stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FAL
 
 library(stargazer)
 
-stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD Model Results (Attendance)
@@ -1465,24 +1462,24 @@ stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = 
 
 library(stargazer)
 
-stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
 # Corsened Exact Matching
 
 + RDD is sensitive to specification errors.
-    + Example: Assuming increases in porportion male have the same effect at all porportions, when therre is an increasing effect.
+    + Example: Assuming increases in proportion male have the same effect at all proportions, i.e., linear effect, when there is an increasing effect.
     + If treated groups are more likely to be male then treatment effects are biased.
 
-+ Corsened Exact Matching (CEM) reduces this problem.
++ Coarsened Exact Matching (CEM) reduces this problem.
     + Break RHS variables into histograms.
     + Multivariate histogram
-    + Remove observations that do not have a treatement and a control observation.
+    + Remove observations that do not have a treatment and a control observation.
 
 # Hypothetical Data
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 #Construct Fake Data
 
@@ -1532,7 +1529,7 @@ data.frame(FakeCEM, Weights = ForWeights$w) %>%
 
 library(cem)
 
-partform <- "Eligible + Placebo + Effective + Placebo:Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+partform <- "Eligible + Placebo + Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
 
 RDDCEMResults <- function(LHS, DataFrame) {
   
@@ -1612,9 +1609,9 @@ HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven 
 
 library(stargazer)
 
-EEMTypes <- c("Effective","Placebo","Effective:Placebo")
+EEMTypes <- c("Effective","Placebo")
 
-stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
@@ -1624,7 +1621,7 @@ stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FAL
 
 library(stargazer)
 
-stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD+CEM Model Results (ELA)
@@ -1633,7 +1630,7 @@ stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD+CEM Model Results (Reading)
@@ -1642,7 +1639,7 @@ stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD+CEM Model Results (Writing)
@@ -1651,7 +1648,7 @@ stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FAL
 
 library(stargazer)
 
-stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD+CEM Model Results (Attendance)
@@ -1660,7 +1657,7 @@ stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = 
 
 library(stargazer)
 
-stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
@@ -1671,7 +1668,7 @@ library(cem)
 Master %>% 
   filter(Eligible  == "YES") -> SelectionData
 
-partform <- "Placebo + Effective + Placebo:Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
+partform <- "Placebo + Effective + as.factor(Year) + MalePct + WhitePct + AAPct + HispanicPct + AsianPct + FreeLunchPct"
 
 SelectCEMResults <- function(LHS, DataFrame) {
   
@@ -1754,9 +1751,9 @@ HAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$Grade
 
 library(stargazer)
 
-EEMTypes <- c("Effective", "Placebo", "Effective:Placebo")
+EEMTypes <- c("Effective", "Placebo")
 
-stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
@@ -1766,7 +1763,7 @@ stargazer(EMath, MMath, HMath, keep = EEMTypes, font.size = "tiny", header = FAL
 
 library(stargazer)
 
-stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # CEM Model Results (ELA)
@@ -1775,7 +1772,7 @@ stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # CEM Model Results (Reading)
@@ -1784,7 +1781,7 @@ stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # CEM Model Results (Writing)
@@ -1793,7 +1790,7 @@ stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FAL
 
 library(stargazer)
 
-stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # CEM Model Results (Attendance)
@@ -1802,7 +1799,7 @@ stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = 
 
 library(stargazer)
 
-stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = TRUE)
+stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
