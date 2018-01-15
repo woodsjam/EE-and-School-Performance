@@ -1289,13 +1289,50 @@ We can't use building characteristics but we can use student characteristics to 
 
 ![](AnalysisPlan.png)
 
-# Simple RDD
+# Simple Regression Discontinuity Design
 
-+ Strong prior that treatment, installing EEMs, is unrelated to student characteristics
++ Units with very similar characteristics should have similar responses.
++ An arbitrary line simulates random assignments to units close to the line.
+    + Two units that would normally be treated but one is outside the line.
+    + Works even if the line is in domain that is correlated with treatment.
++ Depends on correct specification.
 
-+ RDD requires at least parallel movement in response, test scores in this case, 
 
-# Parallel Movement
+# Example RDD Failure
+
++ Treatment for all values of $x > 20$.
++ No true treatment effect.
++ Misspecified as linear model when actually quadratic.
++ Shows tretment effect
+
+# Example RDD Failure
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+x <- c(runif(20, min = 10, max = 20), runif(20, min = 17, max = 27))
+y <- (x - 8)^2 + rnorm(40)
+
+RDDFake <- data.frame(x,y) 
+
+library(ggplot2)
+library(dplyr)
+
+RDDFake %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_vline(xintercept  =  20) +
+  geom_smooth(method = "lm")
+
+```
+
+# RDD Requirements for Us
+
++ Strong prior that treatment, installing EEMs, is unrelated to student characteristics.
+    + Good or bad test performance does not trigger EEMs.
+    + Based solely on energy cost benefit evluation.
++ In this context, RDD requires at least parallel movement in response, test scores in this case, similar to Differences-In-Differences (DID).  
+    
+
+# Parallel Movement Test
 
 $$ ln \left( \frac{p}{1-p} \right) = \beta_0 X_0 + \beta_1 X_1$$
 
@@ -1305,7 +1342,7 @@ $$ ln \left( \frac{p}{1-p} \right) = \beta_0 X_0 + \beta_1 X_1$$
 + $X_1$: Control variables, race/ethnicity and Free and Reduced Lunch, Year
 + Simple F-test of $\beta_0 = \vec{0}$.
 
-# F-Test for Parallel Movement
+# P-Value of F-Test for Parallel Movement
 
 ```{r}
 
@@ -1368,10 +1405,20 @@ Elementary| `r EMath`   | `r ESci`      | `r EELA` |  `r ERead`  |      |
 For those that don't work with education data.
 
 + Male: Correlated with lower pass rates.
++ African-American: Correlated with lower pass rates.
 + Free Reduced: Correlated with lower pass rates.
-+ Suppressed in later tables
++ Suppressed throughout.
 
-# RDD Model Results (Math)
+# RDD Model
+
+$$ ln \left( \frac{p}{1-p} \right) = \beta_0 X_0 + \beta_1 X_1$$
+
++ Only districts with both eligible and ineligible schools with at least one treated school
++ $p$: Fraction of students meeting standards for each test 
++ $X_0$: Placebo and Effective EEMs installed in past.
++ $X_1$: Control variables, Eligibility, race/ethnicity, and Free and Reduced Lunch, Year
+
+# RDD Summary Results (Significant at 10% Level)
 
 ```{r RDDResults, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -1409,6 +1456,23 @@ HAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,
 
 
 ```
+
+Not a lot of evidence 
+
+|School Type     | EEMs    | Math    | Sci     | ELA   | Read    | Write   | Attend|
+|---             |---      |---      |---      |---    |---      |---      |---    |     
+|Elementary      |Effective|  -      |         |       |         |         |       |
+|                |Placebo  |   +     |         |       |  +      |         |       |
+|                |Joint    |  Yes    |         |       |Yes      |         |       |
+|Middle          |Effective|  +      |  +      |       |  +       |         |       |
+|                |Placebo  |         |         |  -    |         |         |       |
+|                |Joint    |  Yes    |  Yes    |  Yes  |  Yes    |         |       |
+|High            |Effective|         |         |       |         |         |       |
+|                |Placebo  |         |         |       | +        |         |       |
+|                |Joint    |         |         |       |  Yes    |         |       |
+      
+      
+# RDD Model Results (Math)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
 
@@ -1474,7 +1538,7 @@ stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header
 
 + Coarsened Exact Matching (CEM) reduces this problem.
     + Break RHS variables into histograms.
-    + Multivariate histogram
+    + Multivariate histograms
     + Remove observations that do not have a treatment and a control observation.
 
 # Hypothetical Data
@@ -1522,8 +1586,7 @@ data.frame(FakeCEM, Weights = ForWeights$w) %>%
 
 ```
 
-
-# RDD+CEM Model Results (Math)
+# RDD+CEM Summary Results (Significant at 10% Level)
 
 ```{r RDDCEMResults, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -1605,6 +1668,23 @@ HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven 
 
 
 
+|School Type     | EEMs    | Math    | Sci     | ELA   | Read    | Write   | Attend|
+|---             |---      |---      |---      |---    |---      |---      |---    |     
+|Elementary      |Effective|   -     |         |       |         |         |       |
+|                |Placebo  |  +      |         |  +   |   +     |   +    |       |
+|                |Joint    |   Yes   |         | Yes   |          |         |       |
+|Middle          |Effective|    +     |  +      |       | +       |         |       |
+|                |Placebo  |         |         |       |  -     |    -    |   -  |
+|                |Joint    |   Yes   |   Yes   |       |   Yes   |   Yes   |   Yes   |
+|High            |Effective|  +     |   +    |  NA   |         |         |  NA     |
+|                |Placebo  |         |         |  NA   |  +      |         |  NA     |
+|                |Joint    |   Yes   |   Yes   |  NA     |   Yes   |         |  NA     |
+
+
+
+
+# RDD+CEM Model Results (Math)
+
 ```{r message=FALSE, warning=FALSE, results= "asis"}
 
 library(stargazer)
@@ -1630,7 +1710,10 @@ stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE,
 
 library(stargazer)
 
-stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
+# stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
+
+
+stargazer(EELA, MELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 # RDD+CEM Model Results (Reading)
@@ -1657,11 +1740,14 @@ stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = 
 
 library(stargazer)
 
-stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
+# stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
+
+stargazer(EAttend, MAttend, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
 
 # Only Eligible 
+
 ```{r}
 library(cem)
 
@@ -1743,6 +1829,24 @@ HAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$Grade
 
 
 ```
+
+# CEM Model Summary Results (Significant at 10% Level)
+
+
+|School Type     | EEMs    | Math    | Sci     | ELA   | Read    | Write   | Attend|
+|-----           |------   |------   |------   |------ |------   |------   |----   |     
+|Elementary      |Effective|         | +       | +     |         |         | -     |
+|                |Placebo  |  +      |   +     |       |  +      |  +       |  -   |
+|                |Joint    |   Yes    |   Yes  | Yes   | Yes     |         | Yes     |
+|Middle          |Effective|   +      | +      |       |  +      |         |       |
+|                |Placebo  |  -      |   -    |  -     |   -     |   -     |      |
+|                |Joint    |   Yes    | Yes   |        | Yes     |       |       |
+|High            |Effective|   +      |   +   |  NA    |         |         |NA      |
+|                |Placebo  |  -     |    -    |        |    +    |        |        |
+|                |Joint    |   Yes    |   Yes |  NA    |         |         |   NA   |
+
+
+
 
 
 # CEM Model Results (Math)
