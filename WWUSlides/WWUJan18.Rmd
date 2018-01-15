@@ -58,7 +58,7 @@ In short, the opposite of what economics is doing with program evaluation, but m
 + No financial gain, not allowed to participate.
 + Improvements in student/staff health and the lifetime effects of academic performance dwarf the value of energy savings.
 
-Almost a perfect framework for regression discontinuity design (RDD).
+Almost a perfect framework for Regression Discontinuity Design (RDD).
 
 # Daylighting (Sampling)
 
@@ -114,7 +114,7 @@ academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
 
 # In Short
 
-+ Students got stuck in the 60s-70s air conditioning daylighting vs air conditioning battle.
++ Students got stuck in the 60s-70s daylighting vs air conditioning battle.
 + Air quality is important but we don't know exactly what part
     + Keep in mind that allergenic mold concentrations, colony forming bodies per liter, can change by factor of 10 in a few hours.
     + Hard to measure.
@@ -190,7 +190,7 @@ Less opportunity for intra-district funding differences but need to watch the bi
 # Key Points
 
 + Management and salary levels may be different across districts 
-+ There are fewer haves and have nots within and between districts than other states.
++ There are fewer haves and have-nots within and between districts than other states.
 
 We can feel more comfortable using schools out of district for controls given equal funding.
 
@@ -1196,13 +1196,13 @@ Master %>%
 
 There are five tests given over the sample period, school years ending 2010 - 2016.
 
-+ English Language Arts 2015-2016
++ English Language Arts (ELA) 2015-2016
     + Writing 2010 - 2014 (High School Only)
     + Reading 2010 - 2014
 + Math
 + Science
 
-But, some elementary and middle school students will take the high school tests and some High school students need to take elementary and middle school tests.
+But, some elementary and middle school students will take the high school tests and some high school students need to take elementary and middle school tests.
 
 # What is Reported
 
@@ -1907,4 +1907,14 @@ stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header
 
 ```
 
+# Discussion
+
+
+
+# Future Work
+
+Notes here:
+Treates all intervenetions as the same.  I don't have scale and scale is hard when all I have is energy savings.
+The estimates for effective and placebo are correlated.  Need to cope with that.
+Have district finance but construction and maintainance are confounded at the 4 digit use fund level.
 
