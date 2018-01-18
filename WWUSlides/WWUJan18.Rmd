@@ -35,7 +35,6 @@ Energy efficiency measures (EEMs) frequently include measures that directly impr
 
 # Background
 
-+ Cost effectiveness evaluation requires an evaluation of _all_ costs and _all_ benefits.
 + Not all jurisdictions use "participant benefits" in evaluation of cost effectiveness because they are not enjoyed by the rate payer.  
 + The "National Efficiency Screening Project" only gives guidance on including non-energy benefits as it explains the symmetry principal, "If you include participant benefits, include participant costs".
 + Some jurisdictions, e.g., The Energy Trust of Oregon, are reducing the technical complexity of evaluations to _reduce evaluation costs_
@@ -48,17 +47,17 @@ Energy efficiency measures (EEMs) frequently include measures that directly impr
 + Simpler econometrics
     + No accounting for self-selection bias.
     + No accounting for sampling bias.
-    + Stops  'futzing'
+    + Stops 'futzing'
     
-In short, the opposite of what economics is doing with program evaluation, but more inline with engineering approach.
+In short, the opposite of what economics is doing with program evaluation, but more inline with engineering approach, i.e., assume randomized assignment and equal probability sampling.
 
-# Why the Effect of Energy Efficency on Education is Interesting
+# Why the Effect of Energy Efficiency on Education is Interesting?
 
-+ Decisions to improve structures is a financial decision -- money saved on energy.
-+ No financial gain, not allowed to participate.
++ Purely facilities decision -- money saved on energy.
++ All Energy Efficiency Measures (EEMs) must pass cost benefit test.
 + Improvements in student/staff health and the lifetime effects of academic performance dwarf the value of energy savings.
 
-Almost a perfect framework for Regression Discontinuity Design (RDD).
++ Oregon provides almost perfect framework for Regression Discontinuity Design (RDD).
 
 # Daylighting (Sampling)
 
@@ -116,8 +115,9 @@ academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
 
 + Students got stuck in the 60s-70s daylighting vs air conditioning battle.
 + Air quality is important but we don't know exactly what part
-    + Keep in mind that allergenic mold concentrations, colony forming bodies per liter, can change by factor of 10 in a few hours.
+    + We know air exchanges, $CO_2$ concentrations are important, but beyond that
     + Hard to measure.
+    + Allergenic mold concentrations, colony forming bodies per liter, can change by factor of 10 in a few hours.
       
 # Why Oregon Schools?
 
@@ -133,7 +133,7 @@ academic achievement”. In: _Indoor air_ 21.2 (2011), pp. 121-131.
 
 + [SB 1149 (1999)](https://www.oregonlegislature.gov/bills_laws/lawsstatutes/1999orLaw0865.html) was Oregon's deregulation bill.
     + It was part of the implementation of FERC 888/889.
-    + Established a public purpose charge that funds thing like The Energy Trust of Oregon.
+    + Established a Public Purpose Charge that funds thing like The Energy Trust of Oregon (ETO).
 + The 3% Public Purpose Charge was collected by _almost_ all the IOUs.
     + Pacificorp and PGE collect, but Idaho Power in Eastern Oregon does not.
     + Used for Energy Efficiency
@@ -156,17 +156,17 @@ Schools using SB 1149 public purpose funds:
 + Eligibility is not triggered by attendance or standardized test performance.
 
 
-Makes it easier to establish a natural control group for any treated school by using others in the district.
+Makes it easier to establish a natural control group for any treated school by using ineligible ones in the district.
 
 # Educational Funding in Oregon
 
 + 1991 Oregon establishes an Equalization Formula:
-    + The legislature establishes a biennial K12 State School Fund Budget
+    + The legislature establishes a biennial K12 State School Fund budget
     + The State School Fund budget is distributed equally by student across the state, but adjusted for property tax collections.
     + $1 increase in property tax collected results in $1 less in State School Fund support.
     + Measure 5 and 50 property tax limitations put most of the power with the legislature.
     
-# School Funding Result
+# School Funding 
     
 Equal, per-student, funding across the state with a few exceptions:
 
@@ -189,10 +189,11 @@ Less opportunity for intra-district funding differences but need to watch the bi
 
 # Key Points
 
-+ Management and salary levels may be different across districts 
-+ There are fewer haves and have-nots within and between districts than other states.
++ Eligibility determined by other than educational  outcomes
++ Equality of financial resources reduces inter-district differences.
++ Smaller districts means fewer intra-district differences.
 
-We can feel more comfortable using schools out of district for controls given equal funding.
+We can feel comfortable using schools out of district for controls given equal funding.
 
 # The Energy Efficiency Measures (EEMs)
 
@@ -233,12 +234,6 @@ The non-impactful EEMs can provide a placebo effect or robustness check on the e
 + Some produce better learning environments, less distraction.  We can use the annual standardized testing results.
     + Everyone in the same grade takes the same test, but the test, and the levels can be different from year-to-year.
 
-# Key Points
-
-+ Test scores are the main indicator but for some EEMs, absenteeism and attendance _may_ be good predictors.
-+ We have some candidates for instruments if we wish to take that route in future.
-
-
 # 
 
 Data Details
@@ -252,6 +247,8 @@ Data Details
     + Targeted Audits are acceptable for limited scope.
     + Target is 47/48 kBTU/SF/Year for elementary and 61/62 kBTU/SF/Year for High Schools 
 + Multi-competent payback calculations are allowed.
+
+Note that some eligible schools already have the Effective EEMs, bias treatment response down.
 
 # School Program Implementation
 
@@ -297,12 +294,12 @@ EEMs %>% select(EEM = MeasureClassDetailDescription) %>%
 # Comments
 
 + Controls are frequently occupancy sensors and day-lighting controls
-+ Fixtures are described in detail later as gym, exterior, etc.
-+ Note that there are large enough numbers of educationally effective and placebo EEMs.
++ Fixtures are described in detail as gym, exterior, LED Exit signs, etc.
 + Each EEM was categorized as either Educationally Effective or Placebo.
     + Exterior, gym, and other non-instructional areas are all placebo.
     + Classroom lighting and controls, shell, window and ventilation improvements are all effective.
-+ A school can have a mix each year.    
++ A school can have a mix each year and can have multiple treatments over the years.
++ Installations are frequently but not always during Summer or Winter break.
 
 # Electric Utilities
 
@@ -462,7 +459,7 @@ AllSchools %>%
   nrow() -> EligibleSchools
 ```
 
-+ Eligible 
++ Eligible (Subset for last Test)
     + Districts: `r EligibleDistricts` 
     + Schools: `r EligibleSchools`
 + Border (Eligible and ineligible schools in district)
@@ -472,11 +469,10 @@ AllSchools %>%
     + Eligible untreated: `r  table(BorderSchools$SB.1149.Eligibility)[2] - table(BorderSchools$Treated)[2]`
     + Eligible treated: `r table(BorderSchools$Treated)[2]`
     + Ineligible: `r table(BorderSchools$SB.1149.Eligibility)[1]`
-+ Schools in Border Districts with treated schools : `r nrow(TreatedDistrictSchools)`
++ Schools in Border Districts with treated schools (Subset for first two Tests): `r nrow(TreatedDistrictSchools)`
     + Eligible untreated: `r  table(TreatedDistrictSchools$SB.1149.Eligibility)[2] - table(TreatedDistrictSchools$Treated)[2]`
     + Eligible treated: `r table(TreatedDistrictSchools$Treated)[2]`
     + Ineligible: `r table(TreatedDistrictSchools$SB.1149.Eligibility)[1]`    
-
  
 ```{r LoadFreeReducedData, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -500,7 +496,6 @@ FreeReduced %>%
 #   View()
 
 ```
- 
  
 ```{r LoadAttendanceData, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
  
@@ -570,7 +565,6 @@ remove(Attendance13, Attendance14, Attendance15, Attendance16, Attendance17, Ear
 
 
 ```
-
 
 ```{r LoadMembershipData, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -1057,8 +1051,6 @@ EEMs %>%
 
 ```
 
-
-
 ```{r MergeAll, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
 FreeReduced %>% 
@@ -1208,8 +1200,9 @@ But, some elementary and middle school students will take the high school tests 
 
 What is reported is the fraction of students at each school that 'meet standards'.  
 
-+ That standard changes from year-to-year
-+ Year is an important control variable, but will be suppressed in later tables
++ Exams can change from year-to-year.
++ The cut point for passing also changes from year-to-year.
++ Year is an important control variable, but will be suppressed in later tables.
 
 # Percent Passing Math By School (State)
 ```{r MathPassing, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -1238,37 +1231,39 @@ Master %>%
 # Getting at Causality, the Identification Problem
 
 + We don't have random assignment.
-+ Regression discontinuity, because of the elgibility requirements, is very close.
-+ Room for improving the match of observable differences accross treated and untreated schools.
++ Regression discontinuity, because of the eligibility requirements, is very close.
++ Room for improving the match of observable differences across treated and untreated schools.
 
 # How Different are Treated, Untreated and Ineligible schools?
 
-Ideally, there should be no _observable_ difference. As close as you can get to random assignment.
+Ideally, there should be no _observable_ difference -- the ignorability assumption. As close as you can get to random assignment.
 
 + Dimensions:
     + Current Student Population, free and reduced rate, ethnicity, etc.
     + Prior Test scores (Parallel movement)
     + Facility characteristics
+    
+The problems start with facility characteristics.
 
-# Not Ideal
+# Problems with Facilities Data
 
-+ Oregon Department of Education discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
++ Oregon Department of Education (ODE) discontinued the School Facilities Report in 2002. Only have built and remodel dates before 2001.
 + Current  facilities characteristics are _only available for audited buildings in schools_.
     + Schools are collections of buildings, not one, very common to have multiple buildings with a variety of vintages. 
     + Elementary near my house has 4 buildings but looks like only 2 .
-
 
 We can't use building characteristics but we can use student characteristics to model treatment process.
 
 # Approaches
 
-+ Only looking at schools in districts that have both eligible and ineligible schools, _border districts_.
-    + Helps control for teacher salaries
-    + Other district policies
+<!-- + Only looking at schools in districts that have both eligible and ineligible schools, _border districts_. -->
+<!--     + Helps control for teacher salaries -->
+<!--     + Other district policies -->
+
 + Ineligible schools in border districts as control
-    + _Regession Disontinuity Design_ (RDD) with student population controls.
+    + _Regression Discontinuity Design_ (RDD) with student population controls.
     + Refine with a matching method, _Coarsened Exact Matching_ (CEM).
-+ Eligible but untreated schools in _all districts_ as controls
++ Eligible but untreated schools in _all eligible districts_ as controls
     + CEM
 
 # Methods
@@ -1284,12 +1279,12 @@ We can't use building characteristics but we can use student characteristics to 
     + Find the close enough match on observable dimensions
     + Reduces sensitivity to specification bias.
 
-# Cover Many Different Assumptions about Endogenaity
+# Cover Many Different Assumptions about Endogeneity
 
 
 ![](AnalysisPlan.png)
 
-# Simple Regression Discontinuity Design
+# Simple Regression Discontinuity Design (RDD)
 
 + Units with very similar characteristics should have similar responses.
 + An arbitrary line simulates random assignments to units close to the line.
@@ -1300,10 +1295,10 @@ We can't use building characteristics but we can use student characteristics to 
 
 # Example RDD Failure
 
-+ Treatment for all values of $x > 20$.
++ Intend to Treatment all values of $x > 20$.
 + No true treatment effect.
 + Misspecified as linear model when actually quadratic.
-+ Shows tretment effect
++ Shows treatment effect
 
 # Example RDD Failure
 
@@ -1327,8 +1322,8 @@ RDDFake %>%
 # RDD Requirements for Us
 
 + Strong prior that treatment, installing EEMs, is unrelated to student characteristics.
-    + Good or bad test performance does not trigger EEMs.
-    + Based solely on energy cost benefit evluation.
+    + Good, or bad, test performance does not trigger EEMs.
+    + Based solely on energy cost benefit evaluation.
 + In this context, RDD requires at least parallel movement in response, test scores in this case, similar to Differences-In-Differences (DID).  
     
 
@@ -1341,6 +1336,16 @@ $$ ln \left( \frac{p}{1-p} \right) = \beta_0 X_0 + \beta_1 X_1$$
 + $X_0$: Ever Treated and Year interacted
 + $X_1$: Control variables, race/ethnicity and Free and Reduced Lunch, Year
 + Simple F-test of $\beta_0 = \vec{0}$.
+
+# Comments on Demographic Controls
+
+For those that don't work with education data.
+
++ Male: Correlated with lower pass rates.
++ African-American: Correlated with lower pass rates.
++ Free Reduced: Correlated with lower pass rates.
++ Suppressed throughout.
+
 
 # P-Value of F-Test for Parallel Movement
 
@@ -1397,17 +1402,9 @@ Middle| `r MMath`   | `r MSci`      | `r MELA` |  `r MRead`  |      |
 Elementary| `r EMath`   | `r ESci`      | `r EELA` |  `r ERead`  |      |
 
 + Blanks for non-required tests
-+ ELA started in 2015, no Middle or High Schools treated.
++ ELA started in 2015 so test not applicable.
 + Slight concern with Middle and Elementary Science test.
 
-# Comments on Demographic Controls
-
-For those that don't work with education data.
-
-+ Male: Correlated with lower pass rates.
-+ African-American: Correlated with lower pass rates.
-+ Free Reduced: Correlated with lower pass rates.
-+ Suppressed throughout.
 
 # RDD Model
 
@@ -1457,7 +1454,6 @@ HAttend <- RDDResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven >0,
 
 ```
 
-Not a lot of evidence 
 
 |School Type     | EEMs    | Math    | Sci     | ELA   | Read    | Write   | Attend|
 |---             |---      |---      |---      |---    |---      |---      |---    |     
@@ -1471,6 +1467,8 @@ Not a lot of evidence
 |                |Placebo  |         |         |       | +        |         |       |
 |                |Joint    |         |         |       |  Yes    |         |       |
       
+
+Not much evidence.
       
 # RDD Model Results (Math)
 
@@ -1530,16 +1528,18 @@ stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header
 
 ```
 
-# Corsened Exact Matching
+# Coarsened Exact Matching
 
 + RDD is sensitive to specification errors.
     + Example: Assuming increases in proportion male have the same effect at all proportions, i.e., linear effect, when there is an increasing effect.
-    + If treated groups are more likely to be male then treatment effects are biased.
+    + If treated groups are more likely to be male, then treatment effects are biased.
 
 + Coarsened Exact Matching (CEM) reduces this problem.
     + Break RHS variables into histograms.
     + Multivariate histograms
     + Remove observations that do not have a treatment and a control observation.
+    + Remove influence of observations not in joint support.
+    + Balance the cells for treated and not treated.
 
 # Hypothetical Data
 
@@ -1680,8 +1680,7 @@ HAttend <- RDDCEMResults("AttendanceLogit", RegDiscData[RegDiscData$GradeEleven 
 |                |Placebo  |         |         |  NA   |  +      |         |  NA     |
 |                |Joint    |   Yes   |   Yes   |  NA     |   Yes   |         |  NA     |
 
-
-
+Recall, Writing was required for HS only and ELA only has two years of data. 
 
 # RDD+CEM Model Results (Math)
 
@@ -1747,6 +1746,13 @@ stargazer(EAttend, MAttend, keep = EEMTypes, font.size = "tiny", header = FALSE,
 ```
 
 # Only Eligible 
+
+Different Identification technique.
+
++ Use all eligible schools with eligible but untreated schools as controls.
+    + Not just the border districts
+    + Not just border districts with treated schools.
++ CEM used as a substitute for IV style identification.
 
 ```{r}
 library(cem)
@@ -1846,9 +1852,6 @@ HAttend <- SelectCEMResults("AttendanceLogit", SelectionData[SelectionData$Grade
 |                |Joint    |   Yes    |   Yes |  NA    |         |         |   NA   |
 
 
-
-
-
 # CEM Model Results (Math)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
@@ -1870,6 +1873,7 @@ library(stargazer)
 stargazer(ESci, MSci, HSci, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
+
 # CEM Model Results (ELA)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
@@ -1879,6 +1883,7 @@ library(stargazer)
 stargazer(EELA, MELA, HELA, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
+
 # CEM Model Results (Reading)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
@@ -1888,6 +1893,7 @@ library(stargazer)
 stargazer(ERead, MRead, HRead, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
+
 # CEM Model Results (Writing)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
@@ -1897,6 +1903,7 @@ library(stargazer)
 stargazer(EWrite, MWrite, HWrite, keep = EEMTypes, font.size = "tiny", header = FALSE, no.space = TRUE, column.sep.width = "1pt", model.numbers = FALSE, column.labels = c("Elementary", "Middle", "High"), style = "aer", single.row = FALSE)
 
 ```
+
 # CEM Model Results (Attendance)
 
 ```{r message=FALSE, warning=FALSE, results= "asis"}
@@ -1909,12 +1916,23 @@ stargazer(EAttend, MAttend, HAttend, keep = EEMTypes, font.size = "tiny", header
 
 # Discussion
 
+ETO guy was right, economists do futz with models.
 
 
-# Future Work
++ Students were right - there is a there there.
++ I found there is a there there but I don't where it is.
++ RDD alone is insufficient -- changes with CEM are too great to not have a specification error.
++ Joint tests of treatment effects are almost all significant.
++ "Placebos" often have real effects.
+    + Collinearity of treatment effects
+    + Effective and Placebo often take place at the same time.
++ Attendance is a dud -- probably a heterogeneous effect on students.
 
-Notes here:
-Treates all intervenetions as the same.  I don't have scale and scale is hard when all I have is energy savings.
-The estimates for effective and placebo are correlated.  Need to cope with that.
-Have district finance but construction and maintainance are confounded at the 4 digit use fund level.
+# Where Next?
 
++ Expand the variability in EEM measurement
++ Include Scale of EEMs
+    + Expenditures in each broad category, windows, controls, etc. crossed with Effective/Placebo.
+    + Not two treatment variables but 12.
+    + Allow the measures to degrade according to the measure life.
++ ODE started using a new attendence measure in the final two years.
