@@ -1023,9 +1023,15 @@ EEMs %>%
     HeatRecovery = if_else(MeasureClassDetailDescription == "Heat Recovery Options", TRUE, FALSE)     
     ) -> EEMs
 
+## Build Scale of EEms
+
+
+
 ## Compress by site/year with any true yielding true, or
 ## 
-## 
+
+EEMs %>%
+  
 
 EEMs %>%
   group_by(FacilityODEId, Year) %>%
